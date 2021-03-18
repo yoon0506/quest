@@ -1,0 +1,6 @@
+package com.yoon.quest;
+
+public class Key {
+    // 마지막 업데이트시간
+    public static final String LAST_CHECKED_MILLIS = "last_checked_millis";
+}
