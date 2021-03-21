@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         tools:context=".ActivityMain">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.yoon.quest.SpringRecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

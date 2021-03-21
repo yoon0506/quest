@@ -1,7 +1,5 @@
 package com.yoon.quest;
 
-import androidx.room.Room;
-
 public class AppData {
 
     private static AppData mInstance = new AppData();

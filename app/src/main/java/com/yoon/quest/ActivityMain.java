@@ -1,28 +1,30 @@
 package com.yoon.quest;
 
+import android.os.Bundle;
+import android.view.View;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-
 import com.yoon.quest.databinding.ActivityMainBinding;
-import com.yoon.quest.databinding.ActivityMainBindingImpl;
 
 import java.util.HashMap;
+
+import timber.log.Timber;
 
 public class ActivityMain extends AppCompatActivity {
 
     private ActivityMain This = this;
-    Adapter adapter;
+    Adapter mAdapter;
     ActivityMainBinding mBinding;
     private FragmentAdd mFragmentAdd;
 
@@ -30,7 +32,20 @@ public class ActivityMain extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(This, R.layout.activity_main);
-        adapter = new Adapter();
+        mAdapter = new Adapter();
+        mAdapter.setListener(new Adapter.Listener() {
+            @Override
+            public void removeItem(DataModel dataModel) {
+                if (dataModel != null) {
+                    new DaoAsyncTask(
+                            AppData.GetInstance().mDB.dataModelDAO(),
+                            Key.DELETE,
+                            Integer.parseInt(String.valueOf(dataModel.getId())),
+                            ""
+                    ).execute();
+                }
+            }
+        });
         AppData.GetInstance().mDB = Room.databaseBuilder(This, LocalDatabase.class, "test-mDB")
                 .build();
         /**
@@ -45,14 +60,34 @@ public class ActivityMain extends AppCompatActivity {
          * file -> project structure -> modules -> source compatibility, target compatibility -> 1.8
          **/
         AppData.GetInstance().mDB.dataModelDAO().getAll().observe(This, dataList -> {
-            adapter.submitList(dataList);
-            adapter.notifyDataSetChanged();
+            mAdapter.submitList(dataList);
+            mAdapter.notifyDataSetChanged();
         });
 
         mBinding.recycler.setLayoutManager(new LinearLayoutManager(This));
         mBinding.recycler.setHasFixedSize(true);
         mBinding.recycler.setItemAnimator(new DefaultItemAnimator());
-        mBinding.recycler.setAdapter(adapter);
+        mBinding.recycler.setAdapter(mAdapter);
+//        mBinding.recycler.setOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                if (!mBinding.recycler.canScrollVertically(-1)) {
+//                    Timber.tag("checkCheck").d("top of list");
+//                } else if (!mBinding.recycler.canScrollVertically(1)) {
+//                    Timber.tag("checkCheck").d("end of list");
+//                } else {
+//                    Timber.tag("checkCheck").d("idle");
+//                }
+//            }
+//        });
+//        mBinding.recycler.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+//            @Override
+//            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+//
+//            }
+//        });
+        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(mAdapter));
+        mItemTouchHelper.attachToRecyclerView(mBinding.recycler);
 
         mBinding.button.setOnClickListener(new View.OnClickListener() {
             @Override
