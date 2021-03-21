@@ -64,6 +64,10 @@ public class FragmentAdd extends Fragment {
              **/
             new DaoAsyncTask(AppData.GetInstance().mDB.dataModelDAO(), Key.INSERT, 0, "")
                     .execute(new DataModel(mBinding.addEdit.getText().toString()));
+            mBinding.addEdit.setText("");
+            if(mListener != null){
+                mListener.eventBack("back");
+            }
         });
 
         /**
@@ -110,6 +114,6 @@ public class FragmentAdd extends Fragment {
 
 
     public interface Listener {
-        public void didRespond(Fragment fragment, String event, HashMap<String, String> data);
+        public void eventBack(String event);
     }
 }

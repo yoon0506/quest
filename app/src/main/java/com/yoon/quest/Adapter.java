@@ -51,7 +51,7 @@ public class Adapter extends ListAdapter<DataModel, Adapter.ItemViewHolder> impl
     @Override
     public void onItemSwipe(int position) {
         if (mListener != null) {
-            mListener.removeItem(getItem(position));
+            mListener.eventRemoveItem(getItem(position));
             notifyItemRemoved(position);
         }
     }
@@ -71,6 +71,6 @@ public class Adapter extends ListAdapter<DataModel, Adapter.ItemViewHolder> impl
     }
 
     public interface Listener {
-        public void removeItem(DataModel dataModel);
+        public void eventRemoveItem(DataModel dataModel);
     }
 }

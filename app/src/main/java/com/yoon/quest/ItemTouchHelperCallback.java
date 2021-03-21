@@ -17,6 +17,7 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         int drag_flags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
         int swipe_flags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+
         return makeMovementFlags(0, swipe_flags);
     }
 
@@ -32,7 +33,6 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
         if (direction == ItemTouchHelper.LEFT) {
             listener.onItemSwipe(viewHolder.getAdapterPosition());
             Timber.tag("checkCheck").d("direction : %s", ItemTouchHelper.LEFT);

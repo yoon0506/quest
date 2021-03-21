@@ -1,9 +1,11 @@
 package com.yoon.quest;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -12,20 +14,15 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.yoon.quest.databinding.ActivityMainBinding;
 
-import java.util.HashMap;
-
-import timber.log.Timber;
-
 public class ActivityMain extends AppCompatActivity {
 
     private ActivityMain This = this;
-    Adapter mAdapter;
-    ActivityMainBinding mBinding;
+    private Adapter mAdapter;
+    private ActivityMainBinding mBinding;
     private FragmentAdd mFragmentAdd;
 
     @Override
@@ -35,7 +32,7 @@ public class ActivityMain extends AppCompatActivity {
         mAdapter = new Adapter();
         mAdapter.setListener(new Adapter.Listener() {
             @Override
-            public void removeItem(DataModel dataModel) {
+            public void eventRemoveItem(DataModel dataModel) {
                 if (dataModel != null) {
                     new DaoAsyncTask(
                             AppData.GetInstance().mDB.dataModelDAO(),
@@ -68,31 +65,24 @@ public class ActivityMain extends AppCompatActivity {
         mBinding.recycler.setHasFixedSize(true);
         mBinding.recycler.setItemAnimator(new DefaultItemAnimator());
         mBinding.recycler.setAdapter(mAdapter);
-//        mBinding.recycler.setOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                if (!mBinding.recycler.canScrollVertically(-1)) {
-//                    Timber.tag("checkCheck").d("top of list");
-//                } else if (!mBinding.recycler.canScrollVertically(1)) {
-//                    Timber.tag("checkCheck").d("end of list");
-//                } else {
-//                    Timber.tag("checkCheck").d("idle");
-//                }
-//            }
-//        });
-//        mBinding.recycler.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//
-//            }
-//        });
+
+        // 스와이프 이벤트
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(mAdapter));
         mItemTouchHelper.attachToRecyclerView(mBinding.recycler);
 
-        mBinding.button.setOnClickListener(new View.OnClickListener() {
+        // 당기기 이벤트
+        mBinding.recycler.setListener(new SpringRecyclerView.Listener() {
             @Override
-            public void onClick(View v) {
-                showFragmentAdd();
+            public void eventAddWrite(String event) {
+                if (event.equals("add")) {
+                    Handler delayHandler = new Handler();
+                    delayHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            showFragmentAdd();
+                        }
+                    }, 500);
+                }
             }
         });
     }
@@ -104,8 +94,13 @@ public class ActivityMain extends AppCompatActivity {
             mFragmentAdd = new FragmentAdd();
             mFragmentAdd.setListener(new FragmentAdd.Listener() {
                 @Override
-                public void didRespond(Fragment fragment, String event, HashMap<String, String> data) {
-
+                public void eventBack(String event) {
+                    if (event.equals("back")) {
+                        if (This.getCurrentFocus() != null) {
+                            hideSoftKeyboard(This);
+                        }
+                        removeFragment(mFragmentAdd);
+                    }
                 }
             });
             mBinding.mainFullFrame.setVisibility(View.VISIBLE);
@@ -119,8 +114,20 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (mFragmentAdd != null) {
+            if (This.getCurrentFocus() != null) {
+                hideSoftKeyboard(This);
+            }
             removeFragment(mFragmentAdd);
         }
+    }
+
+    // 키보드 숨기기.
+    private void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
     }
 
     private void removeFragment(Fragment fragment) {
