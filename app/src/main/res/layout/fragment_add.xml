@@ -27,6 +27,15 @@
                 app:layout_constraintEnd_toStartOf="@id/add_button"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+            <EditText
+                android:id="@+id/add_content_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="20"
+                android:hint="내용 입력"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/add_edit"
+                app:layout_constraintTop_toBottomOf="@id/add_edit" />
 
             <Button
                 android:id="@+id/add_button"
@@ -36,16 +45,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
             <EditText
                 android:id="@+id/update_id_edit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="아이디 입력"
+                android:inputType="numberDecimal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/update_title_edit"
-                app:layout_constraintTop_toBottomOf="@id/add_edit"/>
+                app:layout_constraintTop_toBottomOf="@id/add_content_edit"/>
             <EditText
                 android:id="@+id/update_title_edit"
                 android:layout_width="0dp"
@@ -54,14 +63,25 @@
                 android:hint="타이틀 입력"
                 app:layout_constraintEnd_toStartOf="@id/update_button"
                 app:layout_constraintStart_toEndOf="@id/update_id_edit"
-                app:layout_constraintTop_toBottomOf="@id/add_button" />
+                app:layout_constraintTop_toBottomOf="@id/add_content_edit" />
+            <EditText
+                android:id="@+id/update_content_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ems="20"
+                android:hint="내용 입력"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/update_title_edit"
+                app:layout_constraintTop_toBottomOf="@id/update_id_edit" />
             <Button
                 android:id="@+id/update_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="변경"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/add_button" />
+                app:layout_constraintStart_toEndOf="@+id/update_content_edit"
+                app:layout_constraintTop_toBottomOf="@id/add_content_edit"
+                />
 
             <EditText
                 android:id="@+id/delete_edit"
@@ -72,14 +92,14 @@
                 android:hint="아이디 입력"
                 app:layout_constraintEnd_toStartOf="@id/delete_button"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/update_button" />
+                app:layout_constraintTop_toBottomOf="@id/update_content_edit" />
             <Button
                 android:id="@+id/delete_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="삭제"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/update_button" />
+                app:layout_constraintTop_toBottomOf="@id/update_content_edit" />
 
             <Button
                 android:id="@+id/clear_button"

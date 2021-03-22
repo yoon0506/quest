@@ -12,7 +12,9 @@ import androidx.room.Room;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.yoon.quest._Library._Popup._Popup;
 import com.yoon.quest.databinding.FragmentAddBinding;
 
 import java.util.HashMap;
@@ -21,11 +23,6 @@ public class FragmentAdd extends Fragment {
 
     private FragmentAdd This = this;
     FragmentAddBinding mBinding;
-
-    private final String INSERT = "INSERT";
-    private final String UPDATE = "UPDATE";
-    private final String DELETE = "DELETE";
-    private final String CLEAR = "CLEAR";
 
     private Listener mListener = null;
 
@@ -69,8 +66,20 @@ public class FragmentAdd extends Fragment {
              *  AsyncTask 생성자에 execute 로 DataModelDAO 객체를 던저준다.
              *  비동기 처리
              **/
-            new FragmentAdd.DaoAsyncTask(AppData.GetInstance().mDB.dataModelDAO(), INSERT, 0, "")
-                    .execute(new DataModel(mBinding.addEdit.getText().toString()));
+            if (mBinding.addEdit.getText().toString().equals("")) {
+                Toast.makeText(getContext(), "제목을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (mBinding.addContentEdit.getText().toString().equals("")) {
+                Toast.makeText(getContext(), "내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            new DaoAsyncTask(AppData.GetInstance().mDB.dataModelDAO(), Key.INSERT, 0, "", "")
+                    .execute(new DataModel(mBinding.addEdit.getText().toString(), mBinding.addContentEdit.getText().toString()));
+            if (mListener != null) {
+                mListener.eventBack();
+            }
         });
 
         /**
@@ -79,11 +88,12 @@ public class FragmentAdd extends Fragment {
          * -> update(DataModel) 해당 데이터 업데이트
          **/
         mBinding.updateButton.setOnClickListener(v ->
-                new FragmentAdd.DaoAsyncTask(
+                new DaoAsyncTask(
                         AppData.GetInstance().mDB.dataModelDAO(),
-                        UPDATE,
+                        Key.UPDATE,
                         Integer.parseInt(mBinding.updateIdEdit.getText().toString()),
-                        mBinding.updateTitleEdit.getText().toString()
+                        mBinding.updateTitleEdit.getText().toString(),
+                        mBinding.updateContentEdit.getText().toString()
                 ).execute()
         );
 
@@ -93,11 +103,11 @@ public class FragmentAdd extends Fragment {
          * -> delete(DataModel) 해당 데이터 삭제
          * */
         mBinding.deleteButton.setOnClickListener(v ->
-                new FragmentAdd.DaoAsyncTask(
+                new DaoAsyncTask(
                         AppData.GetInstance().mDB.dataModelDAO(),
-                        DELETE,
+                        Key.DELETE,
                         Integer.parseInt(mBinding.deleteEdit.getText().toString()),
-                        ""
+                        "", ""
                 ).execute()
         );
 
@@ -106,47 +116,18 @@ public class FragmentAdd extends Fragment {
          * 데이터베이스 -> allClear -> 리스트 전부 지움
          * */
         mBinding.clearButton.setOnClickListener(v ->
-                new FragmentAdd.DaoAsyncTask(AppData.GetInstance().mDB.dataModelDAO(), CLEAR, 0, "").execute()
+                _Popup.GetInstance().ShowBinaryPopup(getContext(), "전체 삭제하시겠습니까?", "확인", "취소", new _Popup.BinaryPopupListener() {
+                    @Override
+                    public void didSelectBinaryPopup(String mainMessage, String selectMessage) {
+                        if (selectMessage.equals("확인")) {
+                            new DaoAsyncTask(AppData.GetInstance().mDB.dataModelDAO(), Key.CLEAR, 0, "", "").execute();
+                        }
+                    }
+                })
         );
     }
 
-    /**
-     * 비동기 처리 해주는 것은 dataModelDAO() 이다.
-     * InsertAsyncTask 생성자를 만들어 dataModelDAO() 객체를 받는다.
-     **/
-    private static class DaoAsyncTask extends AsyncTask<DataModel, Void, Void> {
-        private DataModelDAO mDataModelDAO;
-        private String mType;
-        private int mId;
-        private String mTitle;
-
-        private DaoAsyncTask(DataModelDAO dataModelDAO, String type, int id, String title) {
-            this.mDataModelDAO = dataModelDAO;
-            this.mType = type;
-            this.mId = id;
-            this.mTitle = title;
-        }
-
-        @Override
-        protected Void doInBackground(DataModel... dataModels) {
-            if (mType.equals("INSERT")) {
-                mDataModelDAO.insert(dataModels[0]);
-            } else if (mType.equals("UPDATE")) {
-                if (mDataModelDAO.getData(mId) != null) {
-                    mDataModelDAO.dataUpdate(mId, mTitle);
-                }
-            } else if (mType.equals("DELETE")) {
-                if (mDataModelDAO.getData(mId) != null) {
-                    mDataModelDAO.delete(mDataModelDAO.getData(mId));
-                }
-            } else if (mType.equals("CLEAR")) {
-                mDataModelDAO.clearAll();
-            }
-            return null;
-        }
-    }
-
     public interface Listener {
-        public void didRespond(Fragment fragment, String event, HashMap<String, String> data);
+        public void eventBack();
     }
 }

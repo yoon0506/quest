@@ -14,17 +14,25 @@ public class DataModel {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String title;
+    private String content;
 
     // 생성자
-    public DataModel(String title){
+    public DataModel(String title, String content) {
         this.title = title;
+        this.content = content;
     }
 
     public void setTitle(String title) { this.title = title; }
+    public void setContent(String title) {
+        this.content = content;
+    }
 
     public String getTitle() { return title; }
 
     public int getId() { return id; }
+    public String getContent() {
+        return content;
+    }
 
     public void setId(int id) { this.id = id; }
 
@@ -36,7 +44,8 @@ public class DataModel {
     public String toString() {
         final StringBuffer sb = new StringBuffer("DataModel{");
         sb.append("id=").append(id);
-        sb.append(", title=").append(title).append('\'');
+        sb.append(", title=").append(title);
+        sb.append(", content=").append(content).append('\'');
         sb.append('}');
         return sb.toString();
     }
