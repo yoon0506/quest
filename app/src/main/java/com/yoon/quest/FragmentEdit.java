@@ -1,9 +1,11 @@
 package com.yoon.quest;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
@@ -53,7 +55,11 @@ public class FragmentEdit extends Fragment {
 
         mBinding.updateTitleEdit.setText(mDataModel.getTitle());
         mBinding.updateContentEdit.setText(mDataModel.getContent());
-
+        mBinding.editTextView.setOnClickListener(v -> {
+            mBinding.editTextView.setVisibility(View.GONE);
+            mBinding.updateContentEdit.requestFocus();
+            showKeyboard();
+        });
         /**
          * Update
          * 데이터베이스 -> getData(id) -> id 입력하여 DataModel 받아오기
@@ -141,7 +147,7 @@ public class FragmentEdit extends Fragment {
         } else if (mBinding.colorBtn2.equals(colorBtnName)) {
             mmSetColor = "#ffc248";
         } else if (mBinding.colorBtn3.equals(colorBtnName)) {
-            mmSetColor = "#FBE876";
+            mmSetColor = "#fbe876";
         } else if (mBinding.colorBtn4.equals(colorBtnName)) {
             mmSetColor = "#bae553";
         } else if (mBinding.colorBtn5.equals(colorBtnName)) {
@@ -157,6 +163,7 @@ public class FragmentEdit extends Fragment {
     }
 
     private void getScheduleColor(String color) {
+        mSelectedColor = color;
         switch (color) {
             case "#fb7dab":
                 mBinding.colorBtn1.setChecked(true);
@@ -164,7 +171,7 @@ public class FragmentEdit extends Fragment {
             case "#ffc248":
                 mBinding.colorBtn2.setChecked(true);
                 break;
-            case "#FBE876":
+            case "#fbe876":
                 mBinding.colorBtn3.setChecked(true);
                 break;
             case "#bae553":
@@ -183,6 +190,11 @@ public class FragmentEdit extends Fragment {
                 mBinding.colorBtn8.setChecked(true);
                 break;
         }
+    }
+
+    private void showKeyboard(){
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
     public interface Listener {
         public void eventBack();

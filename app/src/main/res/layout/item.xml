@@ -8,28 +8,27 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:background="@color/purple"
+        android:background="@color/white30"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:padding="10dp"
         app:cardCornerRadius="20dp"
-        app:cardBackgroundColor="@color/yellow">
+        app:cardBackgroundColor="@android:color/transparent"
+        app:cardElevation="0dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:paddingLeft="10dp"
+            android:background="@color/white30"
+            android:paddingLeft="20dp"
             android:paddingTop="15dp"
-            android:paddingRight="10dp"
+            android:paddingRight="20dp"
             android:paddingBottom="15dp">
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="18dp"
                 android:textStyle="bold"
                 android:fontFamily="@font/nanum_square_b"
@@ -41,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/title"
                 android:layout_marginTop="10dp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="18dp"
                 tools:text="CONTENT" />
             <!--            <TextView-->

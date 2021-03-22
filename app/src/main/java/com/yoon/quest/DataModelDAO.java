@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 import java.util.List;
+
 /**
  * Data Access Object -> Todo Entity 에 접근하기 위한 인터페이스
  *
@@ -23,21 +24,25 @@ public interface DataModelDAO {
      **/
     @Query("SELECT * FROM DataModel")
     LiveData<List<DataModel>> getAll();
+
     /**
      * id로 데이터 찾기
      */
     @Query("SELECT * FROM DataModel WHERE id = :mId")
     DataModel getData(int mId);
+
     /**
      * Insert annotation -> 내용추가
      **/
     @Insert
     void insert(DataModel dataModel);
+
     /**
      * Delete annotation -> 내용 삭제
      **/
     @Delete
     void delete(DataModel dataModel);
+
     /**
      * id로 데이터를 찾고 입력받은 String 으로 전체 내용을 변경
      **/
@@ -45,21 +50,20 @@ public interface DataModelDAO {
     void dataAllUpdate(int mId, String mTitle, String mContent, String mColor);
 
     /**
-     * id로 데이터를 찾고 입력받은 String 으로 타이틀을 변경
-     **/
-    @Query("UPDATE DataModel SET title =:mTitle  WHERE id =:mId ")
-    void dataTitleUpdate(int mId, String mTitle);
-
-
-    /**
      * id로 데이터를 찾고 입력받은 String 으로 내용을 변경
      **/
-    @Query("UPDATE DataModel SET  content =:mContent  WHERE id =:mId ")
-    void dataContentUpdate(int mId, String mContent);
+    @Query("UPDATE DataModel SET  content =:mContent,color = :mColor  WHERE id =:mId ")
+    void dataContentUpdate(int mId, String mContent, String mColor);
 
     /**
      * Clear All -> 리스트 전체삭제
      **/
     @Query("DELETE FROM DataModel")
     void clearAll();
+
+    /**
+     * for onItemMove
+     */
+    @Query("SELECT * FROM DataModel ORDER BY id ASC")
+    LiveData<List<DataModel>> sortByPosition();
 }

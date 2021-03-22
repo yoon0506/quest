@@ -31,15 +31,16 @@ public class DaoAsyncTask extends AsyncTask<DataModel, Void, Void> {
             mDataModelDAO.insert(dataModels[0]);
         } else if (mType.equals("UPDATE")) {
             if (mDataModelDAO.getData(mId) != null) {
-                if (!mTitle.isEmpty() && !mContent.isEmpty()) {
+                if (!mTitle.isEmpty() && !mColor.isEmpty()) {
                     mDataModelDAO.dataAllUpdate(mId, mTitle, mContent, mColor);
-                } else if (!mTitle.isEmpty() && mContent.isEmpty()) {
-                    mDataModelDAO.dataTitleUpdate(mId, mTitle);
-                } else if (mTitle.isEmpty() && !mContent.isEmpty()) {
-                    mDataModelDAO.dataContentUpdate(mId, mContent);
                 }
+//                else if (!mTitle.isEmpty() && mContent.isEmpty()) {
+//                    mDataModelDAO.dataUpdate(mId, mTitle,"", mColor);
+//                } else if (mTitle.isEmpty() && !mContent.isEmpty()) {
+//                    mDataModelDAO.dataContentUpdate(mId, mContent, mColor);
+//                }
             }
-        }  else if (mType.equals("DELETE")) {
+        } else if (mType.equals("DELETE")) {
             if (mDataModelDAO.getData(mId) != null) {
                 mDataModelDAO.delete(mDataModelDAO.getData(mId));
             }

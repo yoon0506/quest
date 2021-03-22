@@ -1,10 +1,14 @@
 package com.yoon.quest;
 
+import android.app.Application;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import java.util.concurrent.Executors;
 
 @Entity
 public class DataModel {
@@ -60,7 +64,7 @@ public class DataModel {
         sb.append("id=").append(id);
         sb.append(", title=").append(title);
         sb.append(", content=").append(content);
-        sb.append(", content=").append(color).append('\'');
+        sb.append(", color=").append(color).append('\'');
         sb.append('}');
         return sb.toString();
     }
@@ -83,4 +87,5 @@ public class DataModel {
             return oldItem.equals(newItem);
         }
     };
+
 }

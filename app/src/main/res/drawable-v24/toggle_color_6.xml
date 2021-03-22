@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="false"
-        android:drawable="@drawable/schedule_color_6" />
+        android:drawable="@drawable/toggle_color6" />
     <item android:state_checked="true"
-        android:drawable="@drawable/schedule_color_6_selected" />
+        android:drawable="@drawable/toggle_color6_selected" />
 </selector>

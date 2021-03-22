@@ -1,9 +1,11 @@
 package com.yoon.quest;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.Toast;
 
@@ -60,7 +62,11 @@ public class FragmentAdd extends Fragment {
                 mListener.eventBack();
             }
         });
-
+        mBinding.addTextView.setOnClickListener(v -> {
+            mBinding.addTextView.setVisibility(View.GONE);
+            mBinding.addContentEdit.requestFocus();
+            showKeyboard();
+        });
         /**
          * Insert
          * 데이터배이스 객체 . 데이터베이스 DAO . insert -> new DataModel (텍스트 추가)
@@ -74,11 +80,12 @@ public class FragmentAdd extends Fragment {
                 Toast.makeText(getContext(), "제목을 입력해주세요.", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (mBinding.addContentEdit.getText().toString().equals("")) {
-                Toast.makeText(getContext(), "내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (mSelectedColor == null) {
+//            if (mBinding.addContentEdit.getText().toString().equals("")) {
+//                Toast.makeText(getContext(), "내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+            if (mSelectedColor == null)
+            {
                 Toast.makeText(getContext(), "색깔을 선택해주세요.", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -192,7 +199,7 @@ public class FragmentAdd extends Fragment {
         } else if (mBinding.colorBtn2.equals(colorBtnName)) {
             mmSetColor = "#ffc248";
         } else if (mBinding.colorBtn3.equals(colorBtnName)) {
-            mmSetColor = "#FBE876";
+            mmSetColor = "#fbe876";
         } else if (mBinding.colorBtn4.equals(colorBtnName)) {
             mmSetColor = "#bae553";
         } else if (mBinding.colorBtn5.equals(colorBtnName)) {
@@ -206,7 +213,10 @@ public class FragmentAdd extends Fragment {
         }
         return mmSetColor;
     }
-
+    private void showKeyboard(){
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+    }
     public interface Listener {
         public void eventBack();
     }
