@@ -39,14 +39,27 @@ public interface DataModelDAO {
     @Delete
     void delete(DataModel dataModel);
     /**
+     * id로 데이터를 찾고 입력받은 String 으로 전체 내용을 변경
+     **/
+    @Query("UPDATE DataModel SET title =:mTitle, content =:mContent, color = :mColor  WHERE id =:mId ")
+    void dataAllUpdate(int mId, String mTitle, String mContent, String mColor);
+
+    /**
      * id로 데이터를 찾고 입력받은 String 으로 타이틀을 변경
      **/
     @Query("UPDATE DataModel SET title =:mTitle  WHERE id =:mId ")
-    void dataUpdate(int mId, String mTitle);
+    void dataTitleUpdate(int mId, String mTitle);
+
+
+    /**
+     * id로 데이터를 찾고 입력받은 String 으로 내용을 변경
+     **/
+    @Query("UPDATE DataModel SET  content =:mContent  WHERE id =:mId ")
+    void dataContentUpdate(int mId, String mContent);
+
     /**
      * Clear All -> 리스트 전체삭제
      **/
     @Query("DELETE FROM DataModel")
     void clearAll();
 }
-

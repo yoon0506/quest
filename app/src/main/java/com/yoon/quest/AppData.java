@@ -10,4 +10,6 @@ public class AppData {
 
     // Room Database
     public LocalDatabase mDB;
+
+    public int mDataCnt;
 }

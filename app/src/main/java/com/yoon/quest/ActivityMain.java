@@ -1,48 +1,36 @@
 package com.yoon.quest;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.os.Handler;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.room.Room;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+
 import com.yoon.quest.databinding.ActivityMainBinding;
+import com.yoon.quest.databinding.ActivityMainBindingImpl;
+
+import java.util.HashMap;
 
 public class ActivityMain extends AppCompatActivity {
 
     private ActivityMain This = this;
-    private Adapter mAdapter;
-    private ActivityMainBinding mBinding;
+    Adapter adapter;
+    ActivityMainBinding mBinding;
     private FragmentAdd mFragmentAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(This, R.layout.activity_main);
-        mAdapter = new Adapter();
-        mAdapter.setListener(new Adapter.Listener() {
-            @Override
-            public void eventRemoveItem(DataModel dataModel) {
-                if (dataModel != null) {
-                    new DaoAsyncTask(
-                            AppData.GetInstance().mDB.dataModelDAO(),
-                            Key.DELETE,
-                            Integer.parseInt(String.valueOf(dataModel.getId())),
-                            ""
-                    ).execute();
-                }
-            }
-        });
+        adapter = new Adapter();
         AppData.GetInstance().mDB = Room.databaseBuilder(This, LocalDatabase.class, "test-mDB")
                 .build();
         /**
@@ -57,32 +45,19 @@ public class ActivityMain extends AppCompatActivity {
          * file -> project structure -> modules -> source compatibility, target compatibility -> 1.8
          **/
         AppData.GetInstance().mDB.dataModelDAO().getAll().observe(This, dataList -> {
-            mAdapter.submitList(dataList);
-            mAdapter.notifyDataSetChanged();
+            adapter.submitList(dataList);
+            adapter.notifyDataSetChanged();
         });
 
         mBinding.recycler.setLayoutManager(new LinearLayoutManager(This));
         mBinding.recycler.setHasFixedSize(true);
         mBinding.recycler.setItemAnimator(new DefaultItemAnimator());
-        mBinding.recycler.setAdapter(mAdapter);
+        mBinding.recycler.setAdapter(adapter);
 
-        // 스와이프 이벤트
-        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(mAdapter));
-        mItemTouchHelper.attachToRecyclerView(mBinding.recycler);
-
-        // 당기기 이벤트
-        mBinding.recycler.setListener(new SpringRecyclerView.Listener() {
+        mBinding.button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void eventAddWrite(String event) {
-                if (event.equals("add")) {
-                    Handler delayHandler = new Handler();
-                    delayHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showFragmentAdd();
-                        }
-                    }, 500);
-                }
+            public void onClick(View v) {
+                showFragmentAdd();
             }
         });
     }
@@ -94,13 +69,8 @@ public class ActivityMain extends AppCompatActivity {
             mFragmentAdd = new FragmentAdd();
             mFragmentAdd.setListener(new FragmentAdd.Listener() {
                 @Override
-                public void eventBack(String event) {
-                    if (event.equals("back")) {
-                        if (This.getCurrentFocus() != null) {
-                            hideSoftKeyboard(This);
-                        }
-                        removeFragment(mFragmentAdd);
-                    }
+                public void didRespond(Fragment fragment, String event, HashMap<String, String> data) {
+
                 }
             });
             mBinding.mainFullFrame.setVisibility(View.VISIBLE);
@@ -114,20 +84,8 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (mFragmentAdd != null) {
-            if (This.getCurrentFocus() != null) {
-                hideSoftKeyboard(This);
-            }
             removeFragment(mFragmentAdd);
         }
-    }
-
-    // 키보드 숨기기.
-    private void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) activity.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
     }
 
     private void removeFragment(Fragment fragment) {

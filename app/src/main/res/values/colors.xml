@@ -7,4 +7,20 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray">#CCCCCC</color>
+    <color name="green">#4ABC96</color>
+    <color name="lightGreen">#98E4E4</color>
+    <color name="purple">#BB8AF6</color>
+    <color name="yellow">#FBE876</color>
+
+    <color name="schedule1">#fb7dab</color>
+    <color name="schedule2">#ffc248</color>
+    <color name="schedule3">#FBE876</color>
+    <color name="schedule4">#bae553</color>
+    <color name="schedule5">#80daf8</color>
+    <color name="schedule6">#8f91f9</color>
+    <color name="schedule7">#cb85ff</color>
+    <color name="schedule8">#86878a</color>
+
+    <!--71e5d6-->
 </resources>
