@@ -16,6 +16,12 @@ public class ActivityLanding extends AppCompatActivity {
         setContentView(R.layout.activity_landing);
         Timber.plant(new Timber.DebugTree());
         goToActivityMain();
+
+        // 종료
+        if (getIntent().getBooleanExtra(Key.EVENT_APP_EXIT, false)) {
+            this.finishAndRemoveTask();
+            System.exit(0);
+        }
     }
 
     private void goToActivityMain() {

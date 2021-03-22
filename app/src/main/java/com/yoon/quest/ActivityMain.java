@@ -1,50 +1,48 @@
 package com.yoon.quest;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.room.Room;
 
 import com.yoon.quest.databinding.ActivityMainBinding;
 
-import java.util.HashMap;
-
 import me.everything.android.ui.overscroll.IOverScrollDecor;
-import me.everything.android.ui.overscroll.IOverScrollStateListener;
 import me.everything.android.ui.overscroll.IOverScrollUpdateListener;
-import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
 import me.everything.android.ui.overscroll.VerticalOverScrollBounceEffectDecorator;
 import me.everything.android.ui.overscroll.adapters.RecyclerViewOverScrollDecorAdapter;
 import timber.log.Timber;
-
-import static com.google.android.material.behavior.SwipeDismissBehavior.STATE_IDLE;
-import static me.everything.android.ui.overscroll.IOverScrollState.STATE_BOUNCE_BACK;
-import static me.everything.android.ui.overscroll.IOverScrollState.STATE_DRAG_END_SIDE;
-import static me.everything.android.ui.overscroll.IOverScrollState.STATE_DRAG_START_SIDE;
 
 public class ActivityMain extends AppCompatActivity {
 
     private ActivityMain This = this;
     private Adapter mAdapter;
     private ActivityMainBinding mBinding;
+
+    // fragment
     private FragmentAdd mFragmentAdd;
+    private FragmentEdit mFragmentEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(This, R.layout.activity_main);
-        mAdapter = new Adapter();
+        mAdapter = new Adapter(This);
         mAdapter.setListener(new Adapter.Listener() {
             @Override
             public void eventRemoveItem(DataModel dataModel) {
@@ -53,13 +51,21 @@ public class ActivityMain extends AppCompatActivity {
                             AppData.GetInstance().mDB.dataModelDAO(),
                             Key.DELETE,
                             Integer.parseInt(String.valueOf(dataModel.getId())),
-                            "",""
+                            "", "",""
                     ).execute();
+                }
+            }
+
+            @Override
+            public void eventItemClick(DataModel dataModel) {
+                if (dataModel != null) {
+                    showFragmentEdit(dataModel);
                 }
             }
         });
         AppData.GetInstance().mDB = Room.databaseBuilder(This, LocalDatabase.class, "test-mDB")
                 .build();
+
         /**
          * Database 를 관찰하고 변경이 감지될 때 UI 갱신
          * 데이터베이스 mDB -> 데이터베이스 mDataModelDAO()
@@ -74,6 +80,7 @@ public class ActivityMain extends AppCompatActivity {
         AppData.GetInstance().mDB.dataModelDAO().getAll().observe(This, dataList -> {
             mAdapter.submitList(dataList);
             mAdapter.notifyDataSetChanged();
+            AppData.GetInstance().mDataCnt = dataList.size();
         });
 
         mBinding.recycler.setHasFixedSize(true);
@@ -81,49 +88,83 @@ public class ActivityMain extends AppCompatActivity {
         mBinding.recycler.setAdapter(mAdapter);
         mBinding.recycler.setLayoutManager(new LinearLayoutManager(This));
         VerticalOverScrollBounceEffectDecorator decor = new VerticalOverScrollBounceEffectDecorator(new RecyclerViewOverScrollDecorAdapter(mBinding.recycler, new ItemTouchHelperCallback(mAdapter)));
-        decor.setOverScrollUpdateListener(new IOverScrollUpdateListener() {
-            @Override
-            public void onOverScrollUpdate(IOverScrollDecor decor, int state, float offset) {
-                final View view = decor.getView();
-                if (offset > 0) {
-                    // 'view' is currently being over-scrolled from the top.
-                    Handler delayHandler = new Handler();
-                    delayHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mFragmentAdd != null) {
-                                Timber.tag("checkCheck").d("return");
-                                return;
-                            }
-                            showFragmentAdd();
+        decor.setOverScrollUpdateListener((decor1, state, offset) -> {
+            final View view = decor1.getView();
+//                if (offset > 0) {
+            if (offset > 150) {
+                Timber.tag("checkCheck").d("offset : %s", offset);
+                // 'view' is currently being over-scrolled from the top.
+                Handler delayHandler = new Handler();
+                delayHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mFragmentAdd != null) {
+                            Timber.tag("checkCheck").d("return");
+                            return;
                         }
-                    }, 500);
-                } else if (offset < 0) {
-                    // 'view' is currently being over-scrolled from the bottom.
-                } else {
-                    // No over-scroll is in-effect.
-                    // This is synonymous with having (state == STATE_IDLE).
-                }
+                        showFragmentAdd();
+                    }
+                }, 500);
+            } else if (offset < 0) {
+                // 'view' is currently being over-scrolled from the bottom.
+            } else {
+                // No over-scroll is in-effect.
+                // This is synonymous with having (state == STATE_IDLE).
             }
         });
     }
 
     public void showFragmentAdd() {
         try {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(getResources().getColor(R.color.white));
+
             FragmentManager mFragmentManager = getSupportFragmentManager();
             FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
             mFragmentAdd = new FragmentAdd();
-            mFragmentAdd.setListener(new FragmentAdd.Listener() {
-                @Override
-                public void eventBack() {
-                    if (This.getCurrentFocus() != null) {
-                        hideSoftKeyboard(This);
-                    }
-                    hideFragmentAdd();
+            mFragmentAdd.setListener(() -> {
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.setStatusBarColor(getResources().getColor(R.color.lightGreen));
+
+                if (This.getCurrentFocus() != null) {
+                    hideSoftKeyboard(This);
                 }
+                hideFragmentAdd();
             });
             mBinding.mainFullFrame.setVisibility(View.VISIBLE);
             mFragmentTransaction.replace(R.id.mainFullFrame, mFragmentAdd);
+            mFragmentTransaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showFragmentEdit(DataModel dataModel) {
+        try {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(getResources().getColor(R.color.white));
+
+            FragmentManager mFragmentManager = getSupportFragmentManager();
+            FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
+            mFragmentEdit = new FragmentEdit();
+            mFragmentEdit.setData(dataModel);
+            mFragmentEdit.setListener(() -> {
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.setStatusBarColor(getResources().getColor(R.color.lightGreen));
+
+                if (This.getCurrentFocus() != null) {
+                    hideSoftKeyboard(This);
+                }
+                hideFragmentEdit();
+            });
+            mBinding.mainFullFrame.setVisibility(View.VISIBLE);
+            mFragmentTransaction.replace(R.id.mainFullFrame, mFragmentEdit);
             mFragmentTransaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -135,10 +176,34 @@ public class ActivityMain extends AppCompatActivity {
         mFragmentAdd = null;
     }
 
+    private void hideFragmentEdit() {
+        removeFragment(mFragmentEdit);
+        mFragmentEdit = null;
+    }
+
+    private long mBackKeyPressedTime = 0;
     @Override
     public void onBackPressed() {
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(getResources().getColor(R.color.lightGreen));
+
         if (mFragmentAdd != null) {
             hideFragmentAdd();
+            return;
+        }
+        if (mFragmentEdit != null) {
+            hideFragmentEdit();
+            return;
+        }
+        // 두 번 눌러 종료.
+        if (System.currentTimeMillis() <= mBackKeyPressedTime + 3000) {
+            exitApp();
+        }
+        if (System.currentTimeMillis() > mBackKeyPressedTime + 3000) {
+            mBackKeyPressedTime = System.currentTimeMillis();
+            Toast.makeText(This, "'뒤로가기' 버튼을 한 번 더 누르면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -160,4 +225,13 @@ public class ActivityMain extends AppCompatActivity {
         fragment.onDetach();
         fragment = null;
     }
+
+    private void exitApp() {
+        Intent mmIntent = new Intent(This, ActivityLanding.class);
+        mmIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        mmIntent.putExtra(Key.EVENT_APP_EXIT, true);
+        startActivity(mmIntent);
+    }
+
+
 }

@@ -7,16 +7,16 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:clickable="true"
-        tools:context=".FragmentAdd">
+        tools:context=".FragmentEdit">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:context=".FragmentAdd">
+            tools:context=".FragmentEdit">
 
             <RelativeLayout
-                android:id="@+id/add_layout_top"
+                android:id="@+id/update_layout_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/navibar"
@@ -29,22 +29,22 @@
                 android:layout_height="40dp"
                 android:layout_marginLeft="5dp"
                 android:background="@drawable/back"
-                app:layout_constraintBottom_toBottomOf="@id/add_layout_top"
-                app:layout_constraintStart_toStartOf="@+id/add_layout_top"
+                app:layout_constraintBottom_toBottomOf="@id/update_layout_top"
+                app:layout_constraintStart_toStartOf="@+id/update_layout_top"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/add_button"
+                android:id="@+id/update_button"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/done"
-                app:layout_constraintBottom_toBottomOf="@id/add_layout_top"
-                app:layout_constraintEnd_toEndOf="@+id/add_layout_top"
+                app:layout_constraintBottom_toBottomOf="@id/update_layout_top"
+                app:layout_constraintEnd_toEndOf="@+id/update_layout_top"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/add_edit"
+                android:id="@+id/update_title_edit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
@@ -54,13 +54,13 @@
                 android:inputType="text"
                 android:singleLine="true"
                 android:textAlignment="center"
-                app:layout_constraintBottom_toBottomOf="@id/add_layout_top"
-                app:layout_constraintEnd_toStartOf="@+id/add_button"
+                app:layout_constraintBottom_toBottomOf="@id/update_layout_top"
+                app:layout_constraintEnd_toStartOf="@+id/update_button"
                 app:layout_constraintStart_toEndOf="@+id/back_button"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/add_content_edit"
+                android:id="@+id/update_content_edit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -71,7 +71,7 @@
                 android:hint="내용 입력"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/add_layout_top" />
+                app:layout_constraintTop_toBottomOf="@id/update_layout_top" />
 
             <RadioGroup
                 android:id="@+id/colorPickerGroup"
@@ -83,7 +83,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" >
+                app:layout_constraintStart_toStartOf="parent">
 
                 <ToggleButton
                     android:id="@+id/colorBtn1"
@@ -98,7 +98,7 @@
                     android:textOn=" " />
 
                 <ToggleButton
-                    android:id="@+id/colorBtn3"
+                    android:id="@+id/colorBtn2"
                     style="@style/toggleButton"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
@@ -110,7 +110,7 @@
                     android:textOn=" " />
 
                 <ToggleButton
-                    android:id="@+id/colorBtn2"
+                    android:id="@+id/colorBtn3"
                     style="@style/toggleButton"
                     android:layout_width="35dp"
                     android:layout_height="35dp"

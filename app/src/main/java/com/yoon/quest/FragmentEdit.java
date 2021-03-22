@@ -13,13 +13,18 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.yoon.quest.databinding.FragmentAddBinding;
+import com.yoon.quest.databinding.FragmentEditBinding;
+
+import java.util.HashMap;
 
 import timber.log.Timber;
 
-public class FragmentAdd extends Fragment {
+public class FragmentEdit extends Fragment {
 
-    private FragmentAdd This = this;
-    private FragmentAddBinding mBinding;
+    private FragmentEdit This = this;
+    private FragmentEditBinding mBinding;
+
+    private DataModel mDataModel;
     private String mSelectedColor;
 
     private Listener mListener = null;
@@ -31,7 +36,7 @@ public class FragmentAdd extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_add, container, false);
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_edit, container, false);
         View view = mBinding.getRoot();
         return view;
     }
@@ -40,101 +45,38 @@ public class FragmentAdd extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        /**
-//         * Database 를 관찰하고 변경이 감지될 때 UI 갱신
-//         * 데이터베이스 mDB -> 데이터베이스 mDataModelDAO()
-//         * -> getAll() 가져오는 List<DataModel> 객체는 관찰 가능한 객체 이므로
-//         * -> observe 메소드로 관찰하고 변경이 되면 dataList 에 추가한다.
-//         * 변경된 내용이 담긴 dataList 를 출력한다.
-//         **/
-//        /*
-//         * 람다식 사용
-//         * file -> project structure -> modules -> source compatibility, target compatibility -> 1.8
-//         **/
-//        AppData.GetInstance().mDB.dataModelDAO().getAll().observe(This, dataList -> {
-//            mBinding.resultText.setText(dataList.toString());
-//        });
-
         mBinding.backButton.setOnClickListener(v -> {
             if (mListener != null) {
                 mListener.eventBack();
             }
         });
 
-        /**
-         * Insert
-         * 데이터배이스 객체 . 데이터베이스 DAO . insert -> new DataModel (텍스트 추가)
-         **/
-        mBinding.addButton.setOnClickListener(v -> {
-            /**
-             *  AsyncTask 생성자에 execute 로 DataModelDAO 객체를 던저준다.
-             *  비동기 처리
-             **/
-            if (mBinding.addEdit.getText().toString().equals("")) {
-                Toast.makeText(getContext(), "제목을 입력해주세요.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (mBinding.addContentEdit.getText().toString().equals("")) {
-                Toast.makeText(getContext(), "내용을 입력해주세요.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (mSelectedColor == null) {
-                Toast.makeText(getContext(), "색깔을 선택해주세요.", Toast.LENGTH_SHORT).show();
-                return;
-            }
+        mBinding.updateTitleEdit.setText(mDataModel.getTitle());
+        mBinding.updateContentEdit.setText(mDataModel.getContent());
 
-            new DaoAsyncTask(AppData.GetInstance().mDB.dataModelDAO(), Key.INSERT, 0, "", "", "")
-                    .execute(new DataModel(mBinding.addEdit.getText().toString(), mBinding.addContentEdit.getText().toString(), mSelectedColor));
-            if (mListener != null) {
-                mListener.eventBack();
-            }
-        });
-//
-//        /**
-//         * Update
-//         * 데이터베이스 -> getData(id) -> id 입력하여 DataModel 받아오기
-//         * -> update(DataModel) 해당 데이터 업데이트
-//         **/
-//        mBinding.updateButton.setOnClickListener(v ->
-//                new DaoAsyncTask(
-//                        AppData.GetInstance().mDB.dataModelDAO(),
-//                        Key.UPDATE,
-//                        Integer.parseInt(mBinding.updateIdEdit.getText().toString()),
-//                        mBinding.updateTitleEdit.getText().toString(),
-//                        mBinding.updateContentEdit.getText().toString()
-//                ).execute()
-//        );
-//
-//        /**
-//         * Delete
-//         * 데이터베이스 -> getData(id) -> id 입력하여 DataModel 받아오기
-//         * -> delete(DataModel) 해당 데이터 삭제
-//         * */
-//        mBinding.deleteButton.setOnClickListener(v ->
-//                new DaoAsyncTask(
-//                        AppData.GetInstance().mDB.dataModelDAO(),
-//                        Key.DELETE,
-//                        Integer.parseInt(mBinding.deleteEdit.getText().toString()),
-//                        "", ""
-//                ).execute()
-//        );
-//
-//        /**
-//         * Clear
-//         * 데이터베이스 -> allClear -> 리스트 전부 지움
-//         * */
-//        mBinding.clearButton.setOnClickListener(v ->
-//                _Popup.GetInstance().ShowBinaryPopup(getContext(), "전체 삭제하시겠습니까?", "확인", "취소", new _Popup.BinaryPopupListener() {
-//                    @Override
-//                    public void didSelectBinaryPopup(String mainMessage, String selectMessage) {
-//                        if (selectMessage.equals("확인")) {
-//                            new DaoAsyncTask(AppData.GetInstance().mDB.dataModelDAO(), Key.CLEAR, 0, "", "").execute();
-//                        }
-//                    }
-//                })
-//        );
+        /**
+         * Update
+         * 데이터베이스 -> getData(id) -> id 입력하여 DataModel 받아오기
+         * -> update(DataModel) 해당 데이터 업데이트
+         **/
+        mBinding.updateButton.setOnClickListener(v -> {
+                    new DaoAsyncTask(
+                            AppData.GetInstance().mDB.dataModelDAO(),
+                            Key.UPDATE,
+                            Integer.parseInt(String.valueOf(mDataModel.getId())),
+                            mBinding.updateTitleEdit.getText().toString(),
+                            mBinding.updateContentEdit.getText().toString(),
+                            mSelectedColor
+                    ).execute();
+
+                    if (mListener != null) {
+                        mListener.eventBack();
+                    }
+                }
+        );
 
         // 토글 컬러 color
+        getScheduleColor(mDataModel.getColor());
         mBinding.colorBtn1.setOnCheckedChangeListener(mColorClickListener);
         mBinding.colorBtn2.setOnCheckedChangeListener(mColorClickListener);
         mBinding.colorBtn3.setOnCheckedChangeListener(mColorClickListener);
@@ -145,6 +87,13 @@ public class FragmentAdd extends Fragment {
         mBinding.colorBtn8.setOnCheckedChangeListener(mColorClickListener);
     }
 
+    public void setData(DataModel dataModel) {
+        mDataModel = dataModel;
+    }
+
+    /**
+     * toggle
+     */
     private CompoundButton.OnCheckedChangeListener mColorClickListener = new CompoundButton.OnCheckedChangeListener() {
         boolean avoidRecursions = false;
 
@@ -207,6 +156,34 @@ public class FragmentAdd extends Fragment {
         return mmSetColor;
     }
 
+    private void getScheduleColor(String color) {
+        switch (color) {
+            case "#fb7dab":
+                mBinding.colorBtn1.setChecked(true);
+                break;
+            case "#ffc248":
+                mBinding.colorBtn2.setChecked(true);
+                break;
+            case "#FBE876":
+                mBinding.colorBtn3.setChecked(true);
+                break;
+            case "#bae553":
+                mBinding.colorBtn4.setChecked(true);
+                break;
+            case "#80daf8":
+                mBinding.colorBtn5.setChecked(true);
+                break;
+            case "#8f91f9":
+                mBinding.colorBtn6.setChecked(true);
+                break;
+            case "#cb85ff":
+                mBinding.colorBtn7.setChecked(true);
+                break;
+            case "#86878a":
+                mBinding.colorBtn8.setChecked(true);
+                break;
+        }
+    }
     public interface Listener {
         public void eventBack();
     }

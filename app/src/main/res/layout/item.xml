@@ -8,11 +8,12 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:background="@android:color/white"
+        android:background="@color/purple"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:padding="10dp"
-        app:cardCornerRadius="20dp">
+        app:cardCornerRadius="20dp"
+        app:cardBackgroundColor="@color/yellow">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -20,18 +21,18 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:paddingLeft="10dp"
-            android:paddingTop="10dp"
+            android:paddingTop="15dp"
             android:paddingRight="10dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="15dp">
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="18dp"
                 android:textStyle="bold"
-
+                android:fontFamily="@font/nanum_square_b"
                 tools:text="TITLE" />
 
             <TextView
@@ -39,21 +40,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/title"
-                android:textColor="@android:color/holo_green_dark"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/white"
                 android:textSize="18dp"
                 tools:text="CONTENT" />
-
-
-            <TextView
-                android:id="@+id/id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/content"
-                android:textColor="@color/gray"
-                android:textSize="14dp"
-                tools:text="ID" />
+            <!--            <TextView-->
+            <!--                android:id="@+id/id"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_below="@+id/content"-->
+            <!--                android:textColor="@color/white"-->
+            <!--                android:textSize="14dp"-->
+            <!--                tools:text="ID" />-->
 
         </RelativeLayout>
-
     </androidx.cardview.widget.CardView>
 </layout>

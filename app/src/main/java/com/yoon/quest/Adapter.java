@@ -1,10 +1,16 @@
 package com.yoon.quest;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,8 +19,11 @@ import com.yoon.quest.databinding.ItemBinding;
 
 public class Adapter extends ListAdapter<DataModel, Adapter.ItemViewHolder> implements ItemTouchHelperCallback.ItemTouchHelperListener {
 
-    public Adapter() {
+    private Context mContext;
+
+    public Adapter(Context context) {
         super(DataModel.DIFF_CALLBACK);
+        mContext = context;
     }
 
     private DataModel mDataModel;
@@ -38,6 +47,20 @@ public class Adapter extends ListAdapter<DataModel, Adapter.ItemViewHolder> impl
         if (mDataModel != null) {
             holder.onBind(mDataModel);
         }
+
+        LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        // 마지막 아이템에 마진추가.
+        if (position == AppData.GetInstance().mDataCnt - 1) {
+            mParams.topMargin = 30;
+            mParams.leftMargin = 30;
+            mParams.rightMargin = 30;
+            mParams.bottomMargin = 40;
+        } else {
+            mParams.topMargin = 30;
+            mParams.leftMargin = 30;
+            mParams.rightMargin = 30;
+        }
+        holder.itemView.setLayoutParams(mParams);
     }
 
     @Override
@@ -59,16 +82,48 @@ public class Adapter extends ListAdapter<DataModel, Adapter.ItemViewHolder> impl
         ItemViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
+
+            // 클릭이벤트
+            itemView.setOnClickListener(v -> {
+                if (mListener != null) {
+                    int position = getAdapterPosition();
+                    mListener.eventItemClick(getItem(position));
+                }
+            });
         }
 
-        void onBind(DataModel DataModel) {
-            binding.title.setText(DataModel.getTitle());
-            binding.content.setText(DataModel.getContent() + "");
-            binding.id.setText(DataModel.getId() + "");
+        void onBind(DataModel dataModel) {
+            binding.title.setText(dataModel.getTitle());
+            binding.content.setText(dataModel.getContent() + "");
+            setContainerColor(itemView, dataModel.getColor());
+//            binding.id.setText(DataModel.getId() + "");
+        }
+    }
+
+    @SuppressLint("ResourceType")
+    private void setContainerColor(View v, String color) {
+        if (color.equals("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.schedule1) & 0x00ffffff))) {
+            v.setBackgroundResource(R.drawable.rounded_corner_time_line_box_1);
+        } else if (color.equals("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.schedule2) & 0x00ffffff))) {
+            v.setBackgroundResource(R.drawable.rounded_corner_time_line_box_2);
+        } else if (color.equals("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.schedule3) & 0x00ffffff))) {
+            v.setBackgroundResource(R.drawable.rounded_corner_time_line_box_3);
+        } else if (color.equals("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.schedule4) & 0x00ffffff))) {
+            v.setBackgroundResource(R.drawable.rounded_corner_time_line_box_4);
+        } else if (color.equals("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.schedule5) & 0x00ffffff))) {
+            v.setBackgroundResource(R.drawable.rounded_corner_time_line_box_5);
+        } else if (color.equals("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.schedule6) & 0x00ffffff))) {
+            v.setBackgroundResource(R.drawable.rounded_corner_time_line_box_6);
+        } else if (color.equals("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.schedule7) & 0x00ffffff))) {
+            v.setBackgroundResource(R.drawable.rounded_corner_time_line_box_7);
+        } else if (color.equals("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.schedule8) & 0x00ffffff))) {
+            v.setBackgroundResource(R.drawable.rounded_corner_time_line_box_8);
         }
     }
 
     public interface Listener {
         public void eventRemoveItem(DataModel dataModel);
+
+        public void eventItemClick(DataModel dataModel);
     }
 }
