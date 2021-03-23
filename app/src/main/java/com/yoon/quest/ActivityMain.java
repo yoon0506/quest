@@ -42,7 +42,6 @@ public class ActivityMain extends AppCompatActivity {
     private FragmentEdit mFragmentEdit;
 
     private String mSelectedColor;
-    private List<DataModel> mAllDataModelList = new ArrayList<>();
     private List<DataModel> mDataModelList = new ArrayList<>();
     private ArrayList<String> mSelectedColorList = new ArrayList<>();
 
@@ -87,9 +86,19 @@ public class ActivityMain extends AppCompatActivity {
          * file -> project structure -> modules -> source compatibility, target compatibility -> 1.8
          **/
         AppData.GetInstance().mDB.dataModelDAO().getAll().observe(This, dataList -> {
-            mAllDataModelList.addAll(dataList);
+            if (AppData.GetInstance().mAllDataModelList.size() > 0) {
+                AppData.GetInstance().mAllDataModelList.clear();
+                AppData.GetInstance().mAllDataModelList = null;
+                AppData.GetInstance().mAllDataModelList  = new ArrayList<>();
+            }
+            if (mDataModelList.size() > 0) {
+                mDataModelList.clear();
+                mDataModelList = null;
+                mDataModelList = new ArrayList<>();
+            }
+            AppData.GetInstance().mAllDataModelList.addAll(dataList);
             mDataModelList.addAll(dataList);
-            mAdapter.submitList(dataList);
+            mAdapter.submitList(mDataModelList);
             mAdapter.notifyDataSetChanged();
             AppData.GetInstance().mDataCnt = dataList.size();
         });
@@ -368,10 +377,14 @@ public class ActivityMain extends AppCompatActivity {
         AppData.GetInstance().mDB.dataModelDAO().getDataPickedColor(color).observe(This, dataModels -> {
             if (mSelectedColorList.size() == 0) {
                 mDataModelList.clear();
-                mDataModelList.addAll(mAllDataModelList);
+                mDataModelList = null;
+                mDataModelList = new ArrayList<>();
+                mDataModelList.addAll(AppData.GetInstance().mAllDataModelList);
             } else {
                 List<DataModel> mmRemoveList = new ArrayList<>();
-                for (DataModel dataModel : mDataModelList) {
+                List<DataModel> mmTempList = new ArrayList<>();
+                mmTempList.addAll(mDataModelList);
+                for (DataModel dataModel : mmTempList) {
                     for (DataModel compareModel : dataModels) {
                         if (dataModel.equals(compareModel)) {
                             mmRemoveList.add(dataModel);
@@ -381,9 +394,13 @@ public class ActivityMain extends AppCompatActivity {
 
                 if (mmRemoveList.size() > 0) {
                     for (DataModel dataModel : mmRemoveList) {
-                        mDataModelList.remove(dataModel);
+                        mmTempList.remove(dataModel);
                     }
                 }
+                mDataModelList.clear();
+                mDataModelList = null;
+                mDataModelList = new ArrayList<>();
+                mDataModelList.addAll(mmTempList);
             }
             AppData.GetInstance().mDataCnt = mDataModelList.size();
             mAdapter.submitList(mDataModelList);

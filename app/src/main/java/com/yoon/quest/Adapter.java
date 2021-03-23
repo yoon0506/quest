@@ -85,7 +85,7 @@ public class Adapter extends ListAdapter<DataModel, Adapter.ItemViewHolder> impl
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
-        private ItemBinding binding;
+        public ItemBinding binding;
 
         ItemViewHolder(View itemView) {
             super(itemView);
