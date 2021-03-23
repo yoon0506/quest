@@ -67,6 +67,7 @@ public class FragmentAdd extends Fragment {
             mBinding.addContentEdit.requestFocus();
             showKeyboard();
         });
+
         /**
          * Insert
          * 데이터배이스 객체 . 데이터베이스 DAO . insert -> new DataModel (텍스트 추가)
@@ -150,6 +151,10 @@ public class FragmentAdd extends Fragment {
         mBinding.colorBtn6.setOnCheckedChangeListener(mColorClickListener);
         mBinding.colorBtn7.setOnCheckedChangeListener(mColorClickListener);
         mBinding.colorBtn8.setOnCheckedChangeListener(mColorClickListener);
+
+        if (mListener != null) {
+            mListener.eventLayoutDone();
+        }
     }
 
     private CompoundButton.OnCheckedChangeListener mColorClickListener = new CompoundButton.OnCheckedChangeListener() {
@@ -219,5 +224,6 @@ public class FragmentAdd extends Fragment {
     }
     public interface Listener {
         public void eventBack();
+        public void eventLayoutDone();
     }
 }

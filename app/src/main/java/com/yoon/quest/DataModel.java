@@ -49,10 +49,9 @@ public class DataModel {
     }
 
 
-//    public int getCount(){
-//        AppData.GetInstance().mDB.dataModelDAO().getDataCount();
-//        return 0;
-//    }
+    public int getCount(){
+        return AppData.GetInstance().mDataCnt;
+    }
 
     /**
      * toString 재정의 -> 내용확인하기 위함
@@ -74,7 +73,8 @@ public class DataModel {
         if (obj == this)
             return true;
         DataModel myEntity = (DataModel) obj;
-        return myEntity.id == this.id && myEntity.title == this.title && myEntity.content == this.content && myEntity.color == this.color;
+//        return myEntity.id == this.id && myEntity.title == this.title && myEntity.content == this.content && myEntity.color == this.color;
+        return myEntity.id == this.id;
     }
 
     public static DiffUtil.ItemCallback<DataModel> DIFF_CALLBACK = new  DiffUtil.ItemCallback<DataModel>() {
@@ -87,5 +87,4 @@ public class DataModel {
             return oldItem.equals(newItem);
         }
     };
-
 }

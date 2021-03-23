@@ -28,14 +28,22 @@ public class ActivityLanding extends AppCompatActivity {
                 goToActivityMain();
             }
         }, 2000);
-        mAnimDrawable = new AnimationDrawable();
-        mAnimDrawable.addFrame(getResources().getDrawable(R.mipmap.frog), 500);
-        mAnimDrawable.addFrame(getResources().getDrawable(R.mipmap.frog_hands_up), 500);
-        mAnimDrawable.addFrame(getResources().getDrawable(R.mipmap.frog), 500);
-        mAnimDrawable.addFrame(getResources().getDrawable(R.mipmap.frog_hands_up), 500);
-        mAnimDrawable.setOneShot(true);
-        mBinding.frogImage.setImageDrawable(mAnimDrawable);
-        mAnimDrawable.start();
+//        mAnimDrawable = new AnimationDrawable();
+//        mAnimDrawable.addFrame(getResources().getDrawable(R.mipmap.frog), 500);
+//        mAnimDrawable.addFrame(getResources().getDrawable(R.mipmap.frog_hands_up), 500);
+//        mAnimDrawable.addFrame(getResources().getDrawable(R.mipmap.frog), 500);
+//        mAnimDrawable.addFrame(getResources().getDrawable(R.mipmap.frog_hands_up), 500);
+//        mAnimDrawable.setOneShot(true);
+//        mBinding.frogImage.setImageDrawable(mAnimDrawable);
+//        mAnimDrawable.start();
+
+        final AnimationDrawable mmAnimation = (AnimationDrawable) mBinding.frogImage.getBackground();
+        mBinding.frogImage.post(new Runnable() {
+            @Override
+            public void run() {
+                mmAnimation.start();
+            }
+        });
 
         // 종료
         if (getIntent().getBooleanExtra(Key.EVENT_APP_EXIT, false)) {

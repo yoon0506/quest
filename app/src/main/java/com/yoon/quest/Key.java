@@ -10,6 +10,7 @@ public class Key {
     public static final String UPDATE = "UPDATE";
     public static final String DELETE = "DELETE";
     public static final String CLEAR = "CLEAR";
+    public static final String SELECT = "SELECT";
 
     public static final String EVENT_APP_EXIT = "exit";
 }

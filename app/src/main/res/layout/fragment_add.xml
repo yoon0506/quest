@@ -107,7 +107,7 @@
                     android:textOn=" " />
 
                 <ToggleButton
-                    android:id="@+id/colorBtn3"
+                    android:id="@+id/colorBtn2"
                     style="@style/toggleButton"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
@@ -119,7 +119,7 @@
                     android:textOn=" " />
 
                 <ToggleButton
-                    android:id="@+id/colorBtn2"
+                    android:id="@+id/colorBtn3"
                     style="@style/toggleButton"
                     android:layout_width="35dp"
                     android:layout_height="35dp"

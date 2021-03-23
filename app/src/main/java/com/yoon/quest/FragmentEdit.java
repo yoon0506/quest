@@ -91,6 +91,10 @@ public class FragmentEdit extends Fragment {
         mBinding.colorBtn6.setOnCheckedChangeListener(mColorClickListener);
         mBinding.colorBtn7.setOnCheckedChangeListener(mColorClickListener);
         mBinding.colorBtn8.setOnCheckedChangeListener(mColorClickListener);
+
+        if (mListener != null) {
+            mListener.eventLayoutDone();
+        }
     }
 
     public void setData(DataModel dataModel) {
@@ -198,5 +202,6 @@ public class FragmentEdit extends Fragment {
     }
     public interface Listener {
         public void eventBack();
+        public void eventLayoutDone();
     }
 }

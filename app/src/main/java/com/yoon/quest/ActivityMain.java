@@ -7,7 +7,10 @@ import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +23,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.room.Room;
 
 import com.yoon.quest.databinding.ActivityMainBinding;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import me.everything.android.ui.overscroll.VerticalOverScrollBounceEffectDecorator;
 import me.everything.android.ui.overscroll.adapters.RecyclerViewOverScrollDecorAdapter;
@@ -34,6 +40,11 @@ public class ActivityMain extends AppCompatActivity {
     // fragment
     private FragmentAdd mFragmentAdd;
     private FragmentEdit mFragmentEdit;
+
+    private String mSelectedColor;
+    private List<DataModel> mAllDataModelList = new ArrayList<>();
+    private List<DataModel> mDataModelList = new ArrayList<>();
+    private ArrayList<String> mSelectedColorList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +87,8 @@ public class ActivityMain extends AppCompatActivity {
          * file -> project structure -> modules -> source compatibility, target compatibility -> 1.8
          **/
         AppData.GetInstance().mDB.dataModelDAO().getAll().observe(This, dataList -> {
+            mAllDataModelList.addAll(dataList);
+            mDataModelList.addAll(dataList);
             mAdapter.submitList(dataList);
             mAdapter.notifyDataSetChanged();
             AppData.GetInstance().mDataCnt = dataList.size();
@@ -110,6 +123,26 @@ public class ActivityMain extends AppCompatActivity {
                 // This is synonymous with having (state == STATE_IDLE).
             }
         });
+
+        // fold button
+        mBinding.foldButton.setOnClickListener(v -> {
+            clickFoldBtn();
+        });
+
+        // unfold button
+        mBinding.unFoldButton.setOnClickListener(v -> {
+            clickUnFoldBtn();
+        });
+
+        // 토글 컬러 color
+        mBinding.colorBtn1.setOnCheckedChangeListener(mColorClickListener);
+        mBinding.colorBtn2.setOnCheckedChangeListener(mColorClickListener);
+        mBinding.colorBtn3.setOnCheckedChangeListener(mColorClickListener);
+        mBinding.colorBtn4.setOnCheckedChangeListener(mColorClickListener);
+        mBinding.colorBtn5.setOnCheckedChangeListener(mColorClickListener);
+        mBinding.colorBtn6.setOnCheckedChangeListener(mColorClickListener);
+        mBinding.colorBtn7.setOnCheckedChangeListener(mColorClickListener);
+        mBinding.colorBtn8.setOnCheckedChangeListener(mColorClickListener);
     }
 
     public void showFragmentAdd() {
@@ -122,18 +155,28 @@ public class ActivityMain extends AppCompatActivity {
             FragmentManager mFragmentManager = getSupportFragmentManager();
             FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
             mFragmentAdd = new FragmentAdd();
-            mFragmentAdd.setListener(() -> {
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                window.setStatusBarColor(getResources().getColor(R.color.lightGreen));
+            mFragmentAdd.setListener(new FragmentAdd.Listener() {
+                @Override
+                public void eventBack() {
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    window.setStatusBarColor(getResources().getColor(R.color.lightGreen));
 
-                if (This.getCurrentFocus() != null) {
-                    hideSoftKeyboard(This);
+                    if (This.getCurrentFocus() != null) {
+                        hideSoftKeyboard(This);
+                    }
+                    hideFragmentAdd();
                 }
-                hideFragmentAdd();
+
+                @Override
+                public void eventLayoutDone() {
+                    if (mBinding.foldView.getVisibility() == View.VISIBLE) {
+                        clickUnFoldBtn();
+                    }
+                }
             });
             mBinding.mainFullFrame.setVisibility(View.VISIBLE);
-            mFragmentTransaction.replace(R.id.mainFullFrame, mFragmentAdd);
+            mFragmentTransaction.replace(R.id.main_full_frame, mFragmentAdd);
             mFragmentTransaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -151,18 +194,28 @@ public class ActivityMain extends AppCompatActivity {
             FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
             mFragmentEdit = new FragmentEdit();
             mFragmentEdit.setData(dataModel);
-            mFragmentEdit.setListener(() -> {
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                window.setStatusBarColor(getResources().getColor(R.color.lightGreen));
+            mFragmentEdit.setListener(new FragmentEdit.Listener() {
+                @Override
+                public void eventBack() {
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    window.setStatusBarColor(getResources().getColor(R.color.lightGreen));
 
-                if (This.getCurrentFocus() != null) {
-                    hideSoftKeyboard(This);
+                    if (This.getCurrentFocus() != null) {
+                        hideSoftKeyboard(This);
+                    }
+                    hideFragmentEdit();
                 }
-                hideFragmentEdit();
+
+                @Override
+                public void eventLayoutDone() {
+                    if (mBinding.foldView.getVisibility() == View.VISIBLE) {
+                        clickUnFoldBtn();
+                    }
+                }
             });
             mBinding.mainFullFrame.setVisibility(View.VISIBLE);
-            mFragmentTransaction.replace(R.id.mainFullFrame, mFragmentEdit);
+            mFragmentTransaction.replace(R.id.main_full_frame, mFragmentEdit);
             mFragmentTransaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -177,6 +230,28 @@ public class ActivityMain extends AppCompatActivity {
     private void hideFragmentEdit() {
         removeFragment(mFragmentEdit);
         mFragmentEdit = null;
+    }
+
+    private void clickFoldBtn() {
+        mBinding.foldButton.setVisibility(View.GONE);
+        mBinding.foldView.setVisibility(View.VISIBLE);
+        Animation mmSlideUp = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.slide_up);
+        mBinding.foldView.startAnimation(mmSlideUp);
+    }
+
+    private void clickUnFoldBtn() {
+        Animation mmSlideDown = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.slide_down);
+        mBinding.foldView.startAnimation(mmSlideDown);
+        mBinding.foldView.setVisibility(View.GONE);
+        Handler delayHandler = new Handler();
+        delayHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mBinding.foldButton.setVisibility(View.VISIBLE);
+            }
+        }, 500);
     }
 
     private long mBackKeyPressedTime = 0;
@@ -194,6 +269,12 @@ public class ActivityMain extends AppCompatActivity {
         }
         if (mFragmentEdit != null) {
             hideFragmentEdit();
+            return;
+        }
+
+        // fold view 닫기.
+        if (mBinding.foldView.getVisibility() == View.VISIBLE) {
+            clickUnFoldBtn();
             return;
         }
         // 두 번 눌러 종료.
@@ -223,6 +304,91 @@ public class ActivityMain extends AppCompatActivity {
         fragment.onDestroy();
         fragment.onDetach();
         fragment = null;
+    }
+
+    private CompoundButton.OnCheckedChangeListener mColorClickListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (buttonView != null) {
+                mSelectedColor = setScheduleColor(buttonView);
+                if (!mSelectedColorList.contains(mSelectedColor)) {
+                    mSelectedColorList.add(mSelectedColor);
+                    buttonView.setChecked(true);
+                    selectColor(mSelectedColor);
+                } else {
+                    mSelectedColorList.remove(mSelectedColor);
+                    buttonView.setChecked(false);
+                    cancelColor(mSelectedColor);
+                }
+            }
+
+            Timber.tag("checkCheck").d("선택한 색갈 : %s", mSelectedColor);
+            for (String color : mSelectedColorList) {
+                Timber.tag("checkCheck").d("선택한 색갈 리스트 : %s", color);
+            }
+        }
+    };
+
+    private String setScheduleColor(CompoundButton colorBtnName) {
+        String mmSetColor = null;
+        if (mBinding.colorBtn1.equals(colorBtnName)) {
+            mmSetColor = "#fb7dab";
+        } else if (mBinding.colorBtn2.equals(colorBtnName)) {
+            mmSetColor = "#ffc248";
+        } else if (mBinding.colorBtn3.equals(colorBtnName)) {
+            mmSetColor = "#fbe876";
+        } else if (mBinding.colorBtn4.equals(colorBtnName)) {
+            mmSetColor = "#bae553";
+        } else if (mBinding.colorBtn5.equals(colorBtnName)) {
+            mmSetColor = "#80daf8";
+        } else if (mBinding.colorBtn6.equals(colorBtnName)) {
+            mmSetColor = "#8f91f9";
+        } else if (mBinding.colorBtn7.equals(colorBtnName)) {
+            mmSetColor = "#cb85ff";
+        } else if (mBinding.colorBtn8.equals(colorBtnName)) {
+            mmSetColor = "#86878a";
+        }
+        return mmSetColor;
+    }
+
+    private void selectColor(String color) {
+        AppData.GetInstance().mDB.dataModelDAO().getDataPickedColor(color).observe(This, dataModels -> {
+            if (mSelectedColorList.size() == 1) { // 선택한것이 한개이면
+                // 기존 데이터 리스트들 모두 지우기
+                mDataModelList.clear();
+            }
+            mDataModelList.addAll(dataModels);
+            AppData.GetInstance().mDataCnt = mDataModelList.size();
+            mAdapter.submitList(mDataModelList);
+            mAdapter.notifyDataSetChanged();
+        });
+    }
+
+    private void cancelColor(String color) {
+        AppData.GetInstance().mDB.dataModelDAO().getDataPickedColor(color).observe(This, dataModels -> {
+            if (mSelectedColorList.size() == 0) {
+                mDataModelList.clear();
+                mDataModelList.addAll(mAllDataModelList);
+            } else {
+                List<DataModel> mmRemoveList = new ArrayList<>();
+                for (DataModel dataModel : mDataModelList) {
+                    for (DataModel compareModel : dataModels) {
+                        if (dataModel.equals(compareModel)) {
+                            mmRemoveList.add(dataModel);
+                        }
+                    }
+                }
+
+                if (mmRemoveList.size() > 0) {
+                    for (DataModel dataModel : mmRemoveList) {
+                        mDataModelList.remove(dataModel);
+                    }
+                }
+            }
+            AppData.GetInstance().mDataCnt = mDataModelList.size();
+            mAdapter.submitList(mDataModelList);
+            mAdapter.notifyDataSetChanged();
+        });
     }
 
     private void exitApp() {

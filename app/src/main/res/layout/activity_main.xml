@@ -6,7 +6,7 @@
             type="com.yoon.quest.ActivityMain" />
     </data>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,11 +16,163 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RelativeLayout
+            android:id="@+id/fold_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/unFold_button"
+                android:background="@drawable/fold_view"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp">
+
+                <LinearLayout
+                    android:id="@+id/color_picker_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal">
+
+                    <ToggleButton
+                        android:id="@+id/colorBtn1"
+                        style="@style/toggleButton"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="3dp"
+                        android:layout_marginTop="3dp"
+                        android:background="@drawable/toggle_color_1"
+                        android:textOff=" "
+                        android:textOn=" " />
+
+                    <ToggleButton
+                        android:id="@+id/colorBtn2"
+                        style="@style/toggleButton"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:background="@drawable/toggle_color_2"
+                        android:textOff=" "
+                        android:textOn=" " />
+
+                    <ToggleButton
+                        android:id="@+id/colorBtn3"
+                        style="@style/toggleButton"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:background="@drawable/toggle_color_3"
+                        android:textOff=" "
+                        android:textOn=" " />
+
+                    <ToggleButton
+                        android:id="@+id/colorBtn4"
+                        style="@style/toggleButton"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:background="@drawable/toggle_color_4"
+                        android:textOff=" "
+                        android:textOn=" " />
+
+                    <ToggleButton
+                        android:id="@+id/colorBtn5"
+                        style="@style/toggleButton"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:background="@drawable/toggle_color_5"
+                        android:textOff=" "
+                        android:textOn=" " />
+
+                    <ToggleButton
+                        android:id="@+id/colorBtn6"
+                        style="@style/toggleButton"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:background="@drawable/toggle_color_6"
+                        android:textOff=" "
+                        android:textOn=" " />
+
+                    <ToggleButton
+                        android:id="@+id/colorBtn7"
+                        style="@style/toggleButton"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:background="@drawable/toggle_color_7"
+                        android:textOff=" "
+                        android:textOn=" " />
+
+                    <ToggleButton
+                        android:id="@+id/colorBtn8"
+                        style="@style/toggleButton"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginRight="3dp"
+                        android:background="@drawable/toggle_color_8"
+                        android:textOff=" "
+                        android:textOn=" " />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/unFold_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/un_fold" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/fold_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/fold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <FrameLayout
-            android:id="@+id/mainFullFrame"
+            android:id="@+id/main_full_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </RelativeLayout>
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -25,7 +25,8 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
         int drag_flags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
         int swipe_flags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
 //        int swipe_flags = ItemTouchHelper.LEFT;
-        return makeMovementFlags(drag_flags, swipe_flags);
+//        return makeMovementFlags(drag_flags, swipe_flags);
+        return makeMovementFlags(0, swipe_flags);
     }
 
     @Override
@@ -59,7 +60,7 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
                 /*
                  * icon 추가할 수 있음.
                  */
-                icon = BitmapFactory.decodeResource(AppData.GetInstance().mActivity.getResources(), R.mipmap.frog); //vector 불가!
+                icon = BitmapFactory.decodeResource(AppData.GetInstance().mActivity.getResources(), R.drawable.frog); //vector 불가!
                 RectF icon_dest = new RectF((float) itemView.getRight() - 2 * width, (float) itemView.getTop() + width, (float) itemView.getRight() - width, (float) itemView.getBottom() - width);
                 c.drawBitmap(icon, null, icon_dest, p);
             } else {
@@ -70,11 +71,8 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
         }
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
     }
-
-public interface ItemTouchHelperListener {
-    boolean onItemMove(int from_position, int to_position);
-
-    void onItemSwipe(int position);
-}
-
+    public interface ItemTouchHelperListener {
+        boolean onItemMove(int from_position, int to_position);
+        void onItemSwipe(int position);
+    }
 }

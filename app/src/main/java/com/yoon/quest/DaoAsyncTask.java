@@ -27,9 +27,9 @@ public class DaoAsyncTask extends AsyncTask<DataModel, Void, Void> {
 
     @Override
     protected Void doInBackground(DataModel... dataModels) {
-        if (mType.equals("INSERT")) {
+        if (mType.equals(Key.INSERT)) {
             mDataModelDAO.insert(dataModels[0]);
-        } else if (mType.equals("UPDATE")) {
+        } else if (mType.equals(Key.UPDATE)) {
             if (mDataModelDAO.getData(mId) != null) {
                 if (!mTitle.isEmpty() && !mColor.isEmpty()) {
                     mDataModelDAO.dataAllUpdate(mId, mTitle, mContent, mColor);
@@ -40,12 +40,14 @@ public class DaoAsyncTask extends AsyncTask<DataModel, Void, Void> {
 //                    mDataModelDAO.dataContentUpdate(mId, mContent, mColor);
 //                }
             }
-        } else if (mType.equals("DELETE")) {
+        } else if (mType.equals(Key.DELETE)) {
             if (mDataModelDAO.getData(mId) != null) {
                 mDataModelDAO.delete(mDataModelDAO.getData(mId));
             }
-        } else if (mType.equals("CLEAR")) {
+        } else if (mType.equals(Key.CLEAR)) {
             mDataModelDAO.clearAll();
+        } else if (mType.equals(Key.SELECT)){
+            mDataModelDAO.getDataPickedColor(mColor);
         }
         return null;
     }

@@ -56,7 +56,7 @@ public class Adapter extends ListAdapter<DataModel, Adapter.ItemViewHolder> impl
 
         LinearLayout.LayoutParams mParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         // 마지막 아이템에 마진추가.
-        if (position == AppData.GetInstance().mDataCnt - 1) {
+        if (position == mDataModel.getCount() - 1) {
             mParams.topMargin = 30;
             mParams.leftMargin = 30;
             mParams.rightMargin = 30;
@@ -131,7 +131,6 @@ public class Adapter extends ListAdapter<DataModel, Adapter.ItemViewHolder> impl
 
     public interface Listener {
         public void eventRemoveItem(DataModel dataModel);
-
         public void eventItemClick(DataModel dataModel);
     }
 }
