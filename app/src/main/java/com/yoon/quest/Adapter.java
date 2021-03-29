@@ -2,27 +2,18 @@ package com.yoon.quest;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.RectF;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.yoon.quest.databinding.ItemBinding;
-
-import java.util.Collections;
-import java.util.List;
 
 public class Adapter extends ListAdapter<DataModel, Adapter.ItemViewHolder> implements ItemTouchHelperCallback.ItemTouchHelperListener {
 
@@ -124,7 +115,7 @@ public class Adapter extends ListAdapter<DataModel, Adapter.ItemViewHolder> impl
         } else if (color.equals("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.schedule7) & 0x00ffffff))) {
             v.setBackgroundResource(R.drawable.card_item_box7);
         } else if (color.equals("#" + Integer.toHexString(ContextCompat.getColor(mContext, R.color.schedule8) & 0x00ffffff))) {
-            v.setBackgroundResource(R.drawable.card_item_box18);
+            v.setBackgroundResource(R.drawable.card_item_box8);
         }
     }
 

@@ -200,21 +200,21 @@ public class FragmentAdd extends Fragment {
     private String setScheduleColor(CompoundButton colorBtnName) {
         String mmSetColor = null;
         if (mBinding.colorBtn1.equals(colorBtnName)) {
-            mmSetColor = "#fb7dab";
+            mmSetColor = "#f5b1c8";
         } else if (mBinding.colorBtn2.equals(colorBtnName)) {
-            mmSetColor = "#ffc248";
+            mmSetColor = "#f5d3ae";
         } else if (mBinding.colorBtn3.equals(colorBtnName)) {
-            mmSetColor = "#fbe876";
+            mmSetColor = "#fff5b7";
         } else if (mBinding.colorBtn4.equals(colorBtnName)) {
-            mmSetColor = "#bae553";
+            mmSetColor = "#c8f6ae";
         } else if (mBinding.colorBtn5.equals(colorBtnName)) {
-            mmSetColor = "#80daf8";
+            mmSetColor = "#a6e3db";
         } else if (mBinding.colorBtn6.equals(colorBtnName)) {
-            mmSetColor = "#8f91f9";
+            mmSetColor = "#afe4f4";
         } else if (mBinding.colorBtn7.equals(colorBtnName)) {
-            mmSetColor = "#cb85ff";
+            mmSetColor = "#c4c5f3";
         } else if (mBinding.colorBtn8.equals(colorBtnName)) {
-            mmSetColor = "#86878a";
+            mmSetColor = "#e1c3f4";
         }
         return mmSetColor;
     }
