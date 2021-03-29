@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.room.Room;
 
@@ -98,7 +99,7 @@ public class ActivityMain extends AppCompatActivity {
             }
             AppData.GetInstance().mAllDataModelList.addAll(dataList);
             mDataModelList.addAll(dataList);
-            mAdapter.submitList(mDataModelList);
+            mAdapter.submitList(dataList);
             mAdapter.notifyDataSetChanged();
             AppData.GetInstance().mDataCnt = dataList.size();
         });
@@ -107,6 +108,8 @@ public class ActivityMain extends AppCompatActivity {
         mBinding.recycler.setItemAnimator(new DefaultItemAnimator());
         mBinding.recycler.setAdapter(mAdapter);
         mBinding.recycler.setLayoutManager(new LinearLayoutManager(This));
+        mBinding.recycler.addItemDecoration(new DividerItemDecoration(This, DividerItemDecoration.VERTICAL));
+
         VerticalOverScrollBounceEffectDecorator decor = new VerticalOverScrollBounceEffectDecorator(new RecyclerViewOverScrollDecorAdapter(mBinding.recycler, new ItemTouchHelperCallback(mAdapter)));
         decor.setOverScrollUpdateListener((decor1, state, offset) -> {
             final View view = decor1.getView();

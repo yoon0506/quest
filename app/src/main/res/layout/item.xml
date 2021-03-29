@@ -2,44 +2,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<!--    <FrameLayout-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content">-->
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:context=".Adapter"
+        >
 
-<!--        <androidx.cardview.widget.CardView-->
-<!--            android:id="@+id/background_view"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="80dp"-->
-<!--            android:layout_marginLeft="10dp"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:layout_marginRight="10dp"-->
-<!--            android:background="@color/black"-->
-<!--            android:gravity="center_vertical"-->
-<!--            android:orientation="vertical"-->
-<!--            app:cardBackgroundColor="@android:color/transparent"-->
-<!--            app:cardCornerRadius="20dp"-->
-<!--            app:cardElevation="0dp">-->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/background_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/black"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            app:cardBackgroundColor="@color/indigo"
+            app:cardCornerRadius="22dp"
+            app:cardElevation="0dp">
 
-<!--            <RelativeLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:paddingLeft="20dp"-->
-<!--                android:background="@color/black"-->
-<!--                android:paddingTop="15dp"-->
-<!--                android:paddingRight="20dp"-->
-<!--                >-->
+            <ImageView
+                android:id="@+id/background_image"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                android:background="@drawable/background_image_anim" />
 
-<!--                <ImageView-->
-<!--                    android:id="@+id/frog"-->
-<!--                    android:layout_width="65dp"-->
-<!--                    android:layout_height="65dp"-->
-<!--                    android:layout_alignParentEnd="true"-->
-<!--                    android:layout_alignParentBottom="true"-->
-<!--                    android:background="@drawable/frog" />-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingTop="15dp"
+                android:layout_gravity="bottom"
+                android:paddingRight="20dp"
+                >
 
-<!--            </RelativeLayout>-->
+                <ImageView
+                    android:id="@+id/frog"
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/jump_frog" />
 
-<!--        </androidx.cardview.widget.CardView>-->
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/linearItem"
@@ -51,14 +62,13 @@
             android:background="@color/black"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            app:cardBackgroundColor="@android:color/transparent"
+            app:cardBackgroundColor="@color/white30"
             app:cardCornerRadius="20dp"
             app:cardElevation="0dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white30"
                 android:paddingLeft="20dp"
                 android:paddingTop="15dp"
                 android:paddingRight="20dp"
@@ -95,5 +105,5 @@
             </RelativeLayout>
 
         </androidx.cardview.widget.CardView>
-<!--    </FrameLayout>-->
+    </FrameLayout>
 </layout>

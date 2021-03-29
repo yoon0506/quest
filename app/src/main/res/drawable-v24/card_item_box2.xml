@@ -6,6 +6,6 @@
     <stroke android:color="@color/schedule2"
         android:width="2.5dp"/>
 
-    <corners android:radius="25dp"/>
+    <corners android:radius="20dp"/>
     <padding android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="0dp"/>
 </shape>

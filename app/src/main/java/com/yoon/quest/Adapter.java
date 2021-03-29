@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -83,10 +84,8 @@ public class Adapter extends ListAdapter<DataModel, Adapter.ItemViewHolder> impl
             notifyDataSetChanged();
         }
     }
-
     class ItemViewHolder extends RecyclerView.ViewHolder {
         public ItemBinding binding;
-
         ItemViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
@@ -103,7 +102,7 @@ public class Adapter extends ListAdapter<DataModel, Adapter.ItemViewHolder> impl
         void onBind(DataModel dataModel) {
             binding.title.setText(dataModel.getTitle());
             binding.content.setText(dataModel.getContent() + "");
-            setContainerColor(itemView, dataModel.getColor());
+            setContainerColor(binding.linearItem, dataModel.getColor());
         }
     }
 
