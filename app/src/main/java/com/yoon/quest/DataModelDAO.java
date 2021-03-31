@@ -31,6 +31,12 @@ public interface DataModelDAO {
     @Query("SELECT * FROM DataModel WHERE id = :mId")
     DataModel getData(int mId);
 
+    /**
+     * id로 데이터 찾기
+     */
+    @Query("SELECT * FROM DataModel WHERE color = :mColor")
+    DataModel getDataIncludeColor(String mColor);
+
 
     /**
      * color로 데이터 찾기

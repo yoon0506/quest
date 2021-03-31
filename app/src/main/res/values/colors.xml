@@ -19,14 +19,15 @@
     <color name="purple">#BB8AF6</color>
     <color name="yellow">#fbe876</color>
 
-<!--    <color name="schedule1">#fb7dab</color>-->
-<!--    <color name="schedule2">#ffc248</color>-->
-<!--    <color name="schedule3">#fbe876</color>-->
-<!--    <color name="schedule4">#bae553</color>-->
-<!--    <color name="schedule5">#80daf8</color>-->
-<!--    <color name="schedule6">#8f91f9</color>-->
-<!--    <color name="schedule7">#cb85ff</color>-->
-<!--    <color name="schedule8">#86878a</color>-->
+    <!--    <color name="schedule1">#fb7dab</color>-->
+    <!--    <color name="schedule2">#ffc248</color>-->
+    <!--    <color name="schedule3">#fbe876</color>-->
+    <!--    <color name="schedule4">#bae553</color>-->
+    <!--    <color name="schedule5">#80daf8</color>-->
+    <!--    <color name="schedule6">#8f91f9</color>-->
+    <!--    <color name="schedule7">#cb85ff</color>-->
+    <!--    <color name="schedule8">#86878a</color>-->
+
 
     <color name="schedule1">#f5b1c8</color>
     <color name="schedule2">#f5d3ae</color>
@@ -36,6 +37,16 @@
     <color name="schedule6">#afe4f4</color>
     <color name="schedule7">#c4c5f3</color>
     <color name="schedule8">#e1c3f4</color>
+
+<!--    초기색갈-->
+<!--    <color name="schedule1">#fda4c5</color>-->
+<!--    <color name="schedule2">#ffd57f</color>-->
+<!--    <color name="schedule3">#fdefa0</color>-->
+<!--    <color name="schedule4">#cfed87</color>-->
+<!--    <color name="schedule5">#a7e5fa</color>-->
+<!--    <color name="schedule6">#b1b2fb</color>-->
+<!--    <color name="schedule7">#dbaaff</color>-->
+<!--    <color name="schedule8">#ababad</color>-->
 
     <!--71e5d6-->
 </resources>

@@ -43,6 +43,8 @@ public class DaoAsyncTask extends AsyncTask<DataModel, Void, Void> {
         } else if (mType.equals(Key.DELETE)) {
             if (mDataModelDAO.getData(mId) != null) {
                 mDataModelDAO.delete(mDataModelDAO.getData(mId));
+            }else if(mId == -1){
+                mDataModelDAO.delete(mDataModelDAO.getDataIncludeColor(mColor));
             }
         } else if (mType.equals(Key.CLEAR)) {
             mDataModelDAO.clearAll();

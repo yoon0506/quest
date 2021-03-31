@@ -94,7 +94,7 @@ public class FragmentAdd extends Fragment {
             new DaoAsyncTask(AppData.GetInstance().mDB.dataModelDAO(), Key.INSERT, 0, "", "", "")
                     .execute(new DataModel(mBinding.addEdit.getText().toString(), mBinding.addContentEdit.getText().toString(), mSelectedColor));
             if (mListener != null) {
-                mListener.eventBack();
+                mListener.eventInsertDone();
             }
         });
 //
@@ -192,12 +192,12 @@ public class FragmentAdd extends Fragment {
 
             avoidRecursions = false;
 
-            mSelectedColor = setScheduleColor(buttonView);
+            mSelectedColor = setBlockColor(buttonView);
             Timber.tag("checkCheck").d("선택한 색갈 : %s", mSelectedColor);
         }
     };
 
-    private String setScheduleColor(CompoundButton colorBtnName) {
+    private String setBlockColor(CompoundButton colorBtnName) {
         String mmSetColor = null;
         if (mBinding.colorBtn1.equals(colorBtnName)) {
             mmSetColor = "#f5b1c8";
@@ -224,6 +224,7 @@ public class FragmentAdd extends Fragment {
     }
     public interface Listener {
         public void eventBack();
+        public void eventInsertDone();
         public void eventLayoutDone();
     }
 }

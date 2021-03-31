@@ -76,11 +76,13 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
         if (viewHolder != null) {
             final View foregroundView = getView(viewHolder);
             getDefaultUIUtil().onSelected(foregroundView);
+        }else{
 
             if (actionState == ItemTouchHelper.ACTION_STATE_IDLE && mOrderChanged) {
                 frogAnimOff();
                 mOrderChanged = false;
             }
+
         }
     }
 

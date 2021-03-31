@@ -36,6 +36,7 @@ public class ActivityMain extends AppCompatActivity {
 
     private ActivityMain This = this;
     private Adapter mAdapter;
+    private AdapterFiltering mAdapterFiltering;
     private ActivityMainBinding mBinding;
 
     // fragment
@@ -43,6 +44,8 @@ public class ActivityMain extends AppCompatActivity {
     private FragmentEdit mFragmentEdit;
 
     private String mSelectedColor;
+    // update, add, delete, select
+    private String mDataEvent = "";
     private List<DataModel> mDataModelList = new ArrayList<>();
     private ArrayList<String> mSelectedColorList = new ArrayList<>();
 
@@ -87,18 +90,25 @@ public class ActivityMain extends AppCompatActivity {
          * file -> project structure -> modules -> source compatibility, target compatibility -> 1.8
          **/
         AppData.GetInstance().mDB.dataModelDAO().getAll().observe(This, dataList -> {
-            if (AppData.GetInstance().mAllDataModelList.size() > 0) {
-                AppData.GetInstance().mAllDataModelList.clear();
-                AppData.GetInstance().mAllDataModelList = null;
-                AppData.GetInstance().mAllDataModelList  = new ArrayList<>();
+            if(mDataEvent.equals(Key.INSERT)){
+                if (AppData.GetInstance().mAllDataModelList.size() > 0) {
+                    AppData.GetInstance().mAllDataModelList.clear();
+                    AppData.GetInstance().mAllDataModelList = null;
+                    AppData.GetInstance().mAllDataModelList  = new ArrayList<>();
+                }
+                AppData.GetInstance().mAllDataModelList.addAll(dataList);
             }
-            if (mDataModelList.size() > 0) {
-                mDataModelList.clear();
-                mDataModelList = null;
-                mDataModelList = new ArrayList<>();
+//            if (mDataModelList.size() > 0) {
+//                mDataModelList.clear();
+//                mDataModelList = null;
+//                mDataModelList = new ArrayList<>();
+//            }
+//
+//            mDataModelList.addAll(dataList);
+            if(dataList.size() == 0){
+                dataList.addAll(AppData.GetInstance().mAllDataModelList);
             }
-            AppData.GetInstance().mAllDataModelList.addAll(dataList);
-            mDataModelList.addAll(dataList);
+
             mAdapter.submitList(dataList);
             mAdapter.notifyDataSetChanged();
             AppData.GetInstance().mDataCnt = dataList.size();
@@ -170,6 +180,19 @@ public class ActivityMain extends AppCompatActivity {
             mFragmentAdd.setListener(new FragmentAdd.Listener() {
                 @Override
                 public void eventBack() {
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    window.setStatusBarColor(getResources().getColor(R.color.lightGreen));
+
+                    if (This.getCurrentFocus() != null) {
+                        hideSoftKeyboard(This);
+                    }
+                    hideFragmentAdd();
+                }
+
+                @Override
+                public void eventInsertDone() {
+                    mDataEvent = Key.INSERT;
                     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                     window.setStatusBarColor(getResources().getColor(R.color.lightGreen));
@@ -322,7 +345,7 @@ public class ActivityMain extends AppCompatActivity {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (buttonView != null) {
-                mSelectedColor = setScheduleColor(buttonView);
+                mSelectedColor = setBlockColor(buttonView);
                 if (!mSelectedColorList.contains(mSelectedColor)) {
                     mSelectedColorList.add(mSelectedColor);
                     buttonView.setChecked(true);
@@ -341,7 +364,7 @@ public class ActivityMain extends AppCompatActivity {
         }
     };
 
-    private String setScheduleColor(CompoundButton colorBtnName) {
+    private String setBlockColor(CompoundButton colorBtnName) {
         String mmSetColor = null;
         if (mBinding.colorBtn1.equals(colorBtnName)) {
             mmSetColor = "#f5b1c8";
@@ -364,51 +387,59 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     private void selectColor(String color) {
-        AppData.GetInstance().mDB.dataModelDAO().getDataPickedColor(color).observe(This, dataModels -> {
-            if (mSelectedColorList.size() == 1) { // 선택한것이 한개이면
-                // 기존 데이터 리스트들 모두 지우기
-                mDataModelList.clear();
-            }
-            mDataModelList.addAll(dataModels);
-            AppData.GetInstance().mDataCnt = mDataModelList.size();
-            mAdapter.submitList(mDataModelList);
-            mAdapter.notifyDataSetChanged();
-        });
+        new DaoAsyncTask(
+                AppData.GetInstance().mDB.dataModelDAO(),
+                Key.SELECT,
+                -1,
+                "",
+                "",
+                color
+        ).execute();
     }
 
     private void cancelColor(String color) {
-        AppData.GetInstance().mDB.dataModelDAO().getDataPickedColor(color).observe(This, dataModels -> {
-            if (mSelectedColorList.size() == 0) {
-                mDataModelList.clear();
-                mDataModelList = null;
-                mDataModelList = new ArrayList<>();
-                mDataModelList.addAll(AppData.GetInstance().mAllDataModelList);
-            } else {
-                List<DataModel> mmRemoveList = new ArrayList<>();
-                List<DataModel> mmTempList = new ArrayList<>();
-                mmTempList.addAll(mDataModelList);
-                for (DataModel dataModel : mmTempList) {
-                    for (DataModel compareModel : dataModels) {
-                        if (dataModel.equals(compareModel)) {
-                            mmRemoveList.add(dataModel);
-                        }
-                    }
-                }
-
-                if (mmRemoveList.size() > 0) {
-                    for (DataModel dataModel : mmRemoveList) {
-                        mmTempList.remove(dataModel);
-                    }
-                }
-                mDataModelList.clear();
-                mDataModelList = null;
-                mDataModelList = new ArrayList<>();
-                mDataModelList.addAll(mmTempList);
-            }
-            AppData.GetInstance().mDataCnt = mDataModelList.size();
-            mAdapter.submitList(mDataModelList);
-            mAdapter.notifyDataSetChanged();
-        });
+        mDataEvent = Key.DELETE;
+        new DaoAsyncTask(
+                AppData.GetInstance().mDB.dataModelDAO(),
+                Key.DELETE,
+                -1,
+                "",
+                "",
+                color
+        ).execute();
+//
+//        AppData.GetInstance().mDB.dataModelDAO().getDataPickedColor(color).observe(This, dataModels -> {
+//            if (mSelectedColorList.size() == 0) {
+//                mDataModelList.clear();
+//                mDataModelList = null;
+//                mDataModelList = new ArrayList<>();
+//                mDataModelList.addAll(AppData.GetInstance().mAllDataModelList);
+//            } else {
+//                List<DataModel> mmRemoveList = new ArrayList<>();
+//                List<DataModel> mmTempList = new ArrayList<>();
+//                mmTempList.addAll(mDataModelList);
+//                for (DataModel dataModel : mmTempList) {
+//                    for (DataModel compareModel : dataModels) {
+//                        if (dataModel.equals(compareModel)) {
+//                            mmRemoveList.add(dataModel);
+//                        }
+//                    }
+//                }
+//
+//                if (mmRemoveList.size() > 0) {
+//                    for (DataModel dataModel : mmRemoveList) {
+//                        mmTempList.remove(dataModel);
+//                    }
+//                }
+//                mDataModelList.clear();
+//                mDataModelList = null;
+//                mDataModelList = new ArrayList<>();
+//                mDataModelList.addAll(mmTempList);
+//            }
+//            AppData.GetInstance().mDataCnt = mDataModelList.size();
+//            mAdapter.submitList(mDataModelList);
+//            mAdapter.notifyDataSetChanged();
+//        });
     }
 
     private void exitApp() {

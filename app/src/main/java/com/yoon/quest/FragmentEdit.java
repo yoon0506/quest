@@ -139,12 +139,12 @@ public class FragmentEdit extends Fragment {
 
             avoidRecursions = false;
 
-            mSelectedColor = setScheduleColor(buttonView);
+            mSelectedColor = setBlockColor(buttonView);
             Timber.tag("checkCheck").d("선택한 색갈 : %s", mSelectedColor);
         }
     };
 
-    private String setScheduleColor(CompoundButton colorBtnName) {
+    private String setBlockColor(CompoundButton colorBtnName) {
         String mmSetColor = null;
         if (mBinding.colorBtn1.equals(colorBtnName)) {
             mmSetColor = "#f5b1c8";
