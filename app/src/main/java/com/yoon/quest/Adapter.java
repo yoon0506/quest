@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.yoon.quest.MainData.DataModel;
 import com.yoon.quest.databinding.ItemBinding;
 
 public class Adapter extends ListAdapter<DataModel, Adapter.ItemViewHolder> implements ItemTouchHelperCallback.ItemTouchHelperListener {

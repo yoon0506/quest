@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.yoon.quest.MainData.DaoAsyncTask;
+import com.yoon.quest.MainData.DataModel;
 import com.yoon.quest.databinding.FragmentAddBinding;
 
 import timber.log.Timber;

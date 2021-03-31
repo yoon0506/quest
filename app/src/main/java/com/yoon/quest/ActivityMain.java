@@ -23,6 +23,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.room.Room;
 
+import com.yoon.quest.MainData.DaoAsyncTask;
+import com.yoon.quest.MainData.DataModel;
+import com.yoon.quest.SubData.SubDaoAsyncTask;
+import com.yoon.quest.SubData.SubDataModel;
 import com.yoon.quest.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -36,7 +40,7 @@ public class ActivityMain extends AppCompatActivity {
 
     private ActivityMain This = this;
     private Adapter mAdapter;
-    private AdapterFiltering mAdapterFiltering;
+    private SubAdapter mSubAdapter;
     private ActivityMainBinding mBinding;
 
     // fragment
@@ -75,6 +79,27 @@ public class ActivityMain extends AppCompatActivity {
                 }
             }
         });
+        mSubAdapter = new SubAdapter(This);
+//        mSubAdapter.setListener(new SubAdapter.Listener() {
+//            @Override
+//            public void eventRemoveItem(SubDataModel dataModel) {
+//                if (dataModel != null) {
+//                    new DaoAsyncTask(
+//                            AppData.GetInstance().mDB.dataModelDAO(),
+//                            Key.DELETE,
+//                            Integer.parseInt(String.valueOf(dataModel.getId())),
+//                            "", "", ""
+//                    ).execute();
+//                }
+//            }
+//
+//            @Override
+//            public void eventItemClick(SubDataModel dataModel) {
+//                if (dataModel != null) {
+//                    showFragmentEdit(dataModel);
+//                }
+//            }
+//        });
         AppData.GetInstance().mDB = Room.databaseBuilder(This, LocalDatabase.class, "test-mDB")
                 .build();
 
@@ -90,28 +115,22 @@ public class ActivityMain extends AppCompatActivity {
          * file -> project structure -> modules -> source compatibility, target compatibility -> 1.8
          **/
         AppData.GetInstance().mDB.dataModelDAO().getAll().observe(This, dataList -> {
-            if(mDataEvent.equals(Key.INSERT)){
-                if (AppData.GetInstance().mAllDataModelList.size() > 0) {
-                    AppData.GetInstance().mAllDataModelList.clear();
-                    AppData.GetInstance().mAllDataModelList = null;
-                    AppData.GetInstance().mAllDataModelList  = new ArrayList<>();
-                }
-                AppData.GetInstance().mAllDataModelList.addAll(dataList);
-            }
-//            if (mDataModelList.size() > 0) {
-//                mDataModelList.clear();
-//                mDataModelList = null;
-//                mDataModelList = new ArrayList<>();
-//            }
-//
-//            mDataModelList.addAll(dataList);
-            if(dataList.size() == 0){
-                dataList.addAll(AppData.GetInstance().mAllDataModelList);
-            }
-
             mAdapter.submitList(dataList);
             mAdapter.notifyDataSetChanged();
             AppData.GetInstance().mDataCnt = dataList.size();
+        });
+
+        AppData.GetInstance().mDB.subdataModelDAO().getAll().observe(This, dataList -> {
+            mSubAdapter.submitList(dataList);
+            mSubAdapter.notifyDataSetChanged();
+            AppData.GetInstance().mSubDataCnt = dataList.size();
+            if(dataList.size() == 0 ){
+                mBinding.recycler.setVisibility(View.VISIBLE);
+                mBinding.subRecycler.setVisibility(View.GONE);
+            }else{
+                mBinding.recycler.setVisibility(View.GONE);
+                mBinding.subRecycler.setVisibility(View.VISIBLE);
+            }
         });
 
         mBinding.recycler.setHasFixedSize(true);
@@ -120,6 +139,7 @@ public class ActivityMain extends AppCompatActivity {
         mBinding.recycler.setLayoutManager(new LinearLayoutManager(This));
         mBinding.recycler.addItemDecoration(new DividerItemDecoration(This, DividerItemDecoration.VERTICAL));
 
+        // 아래로 끌어당겨 데이터 추가
         VerticalOverScrollBounceEffectDecorator decor = new VerticalOverScrollBounceEffectDecorator(new RecyclerViewOverScrollDecorAdapter(mBinding.recycler, new ItemTouchHelperCallback(mAdapter)));
         decor.setOverScrollUpdateListener((decor1, state, offset) -> {
             final View view = decor1.getView();
@@ -145,6 +165,14 @@ public class ActivityMain extends AppCompatActivity {
                 // This is synonymous with having (state == STATE_IDLE).
             }
         });
+
+        // for sub
+        mBinding.subRecycler.setHasFixedSize(true);
+        mBinding.subRecycler.setItemAnimator(new DefaultItemAnimator());
+        mBinding.subRecycler.setAdapter(mSubAdapter);
+        mBinding.subRecycler.setLayoutManager(new LinearLayoutManager(This));
+        mBinding.subRecycler.addItemDecoration(new DividerItemDecoration(This, DividerItemDecoration.VERTICAL));
+
 
         // fold button
         mBinding.foldButton.setOnClickListener(v -> {
@@ -361,6 +389,10 @@ public class ActivityMain extends AppCompatActivity {
             for (String color : mSelectedColorList) {
                 Timber.tag("checkCheck").d("선택한 색갈 리스트 : %s", color);
             }
+            if(mSelectedColorList.size()== 0){
+                mBinding.recycler.setVisibility(View.VISIBLE);
+                mBinding.subRecycler.setVisibility(View.GONE);
+            }
         }
     };
 
@@ -387,20 +419,22 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     private void selectColor(String color) {
-        new DaoAsyncTask(
-                AppData.GetInstance().mDB.dataModelDAO(),
+        new SubDaoAsyncTask(
+                AppData.GetInstance().mDB.subdataModelDAO(),
                 Key.SELECT,
                 -1,
                 "",
                 "",
                 color
         ).execute();
+        mBinding.recycler.setVisibility(View.GONE);
+        mBinding.subRecycler.setVisibility(View.VISIBLE);
     }
 
     private void cancelColor(String color) {
         mDataEvent = Key.DELETE;
-        new DaoAsyncTask(
-                AppData.GetInstance().mDB.dataModelDAO(),
+        new SubDaoAsyncTask(
+                AppData.GetInstance().mDB.subdataModelDAO(),
                 Key.DELETE,
                 -1,
                 "",

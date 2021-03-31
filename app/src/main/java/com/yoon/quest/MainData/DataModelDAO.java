@@ -1,4 +1,4 @@
-package com.yoon.quest;
+package com.yoon.quest.MainData;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;

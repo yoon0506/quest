@@ -2,6 +2,8 @@ package com.yoon.quest;
 
 import android.app.Activity;
 
+import com.yoon.quest.MainData.DataModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,7 @@ public class AppData {
     public LocalDatabase mDB;
 
     public int mDataCnt;
+    public int mSubDataCnt;
     public Activity mActivity;
     public List<DataModel> mAllDataModelList = new ArrayList<>();
 

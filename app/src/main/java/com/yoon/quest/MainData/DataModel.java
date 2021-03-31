@@ -1,14 +1,11 @@
-package com.yoon.quest;
-
-import android.app.Application;
+package com.yoon.quest.MainData;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.util.concurrent.Executors;
+import com.yoon.quest.AppData;
 
 @Entity
 public class DataModel {

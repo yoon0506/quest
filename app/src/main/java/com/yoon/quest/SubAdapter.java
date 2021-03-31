@@ -13,18 +13,19 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.yoon.quest.SubData.SubDataModel;
 import com.yoon.quest.databinding.ItemBinding;
 
-public class AdapterFiltering extends ListAdapter<DataModel, AdapterFiltering.ItemViewHolder> implements ItemTouchHelperCallback.ItemTouchHelperListener {
+public class SubAdapter extends ListAdapter<SubDataModel, SubAdapter.ItemViewHolder> implements ItemTouchHelperCallback.ItemTouchHelperListener {
 
     private Context mContext;
 
-    public AdapterFiltering(Context context) {
-        super(DataModel.DIFF_CALLBACK);
+    public SubAdapter(Context context) {
+        super(SubDataModel.DIFF_CALLBACK);
         mContext = context;
     }
 
-    private DataModel mDataModel;
+    private SubDataModel mDataModel;
 
     private Listener mListener;
 
@@ -36,7 +37,7 @@ public class AdapterFiltering extends ListAdapter<DataModel, AdapterFiltering.It
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
-        return new AdapterFiltering.ItemViewHolder(view);
+        return new SubAdapter.ItemViewHolder(view);
     }
 
     @Override
@@ -90,7 +91,7 @@ public class AdapterFiltering extends ListAdapter<DataModel, AdapterFiltering.It
             });
         }
 
-        void onBind(DataModel dataModel) {
+        void onBind(SubDataModel dataModel) {
             binding.title.setText(dataModel.getTitle());
             binding.content.setText(dataModel.getContent() + "");
             setContainerColor(binding.linearItem, dataModel.getColor());
@@ -120,7 +121,7 @@ public class AdapterFiltering extends ListAdapter<DataModel, AdapterFiltering.It
     }
 
     public interface Listener {
-        public void eventRemoveItem(DataModel dataModel);
-        public void eventItemClick(DataModel dataModel);
+        public void eventRemoveItem(SubDataModel dataModel);
+        public void eventItemClick(SubDataModel dataModel);
     }
 }
