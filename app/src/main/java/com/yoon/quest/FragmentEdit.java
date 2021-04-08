@@ -53,11 +53,6 @@ public class FragmentEdit extends Fragment {
 
         mBinding.updateTitleEdit.setText(mDataModel.getTitle());
         mBinding.updateContentEdit.setText(mDataModel.getContent());
-        mBinding.editTextView.setOnClickListener(v -> {
-            mBinding.editTextView.setVisibility(View.GONE);
-            mBinding.updateContentEdit.requestFocus();
-            showKeyboard();
-        });
         /**
          * Update
          * 데이터베이스 -> getData(id) -> id 입력하여 DataModel 받아오기

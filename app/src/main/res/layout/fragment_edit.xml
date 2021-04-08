@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -10,9 +9,10 @@
         android:clickable="true"
         tools:context=".FragmentEdit">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="vertical"
             tools:context=".FragmentEdit">
 
@@ -20,82 +20,69 @@
                 android:id="@+id/update_layout_top"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/navibar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:background="@drawable/navibar">
 
-            <ImageView
-                android:id="@+id/back_button"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/back"
-                app:layout_constraintBottom_toBottomOf="@id/update_layout_top"
-                app:layout_constraintStart_toStartOf="@+id/update_layout_top"
-                app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/update_button"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/done"
-                app:layout_constraintBottom_toBottomOf="@id/update_layout_top"
-                app:layout_constraintEnd_toEndOf="@+id/update_layout_top"
-                app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/back_button"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/back" />
 
-            <EditText
-                android:id="@+id/update_title_edit"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:ems="12"
-                android:padding="13dp"
-                android:fontFamily="@font/nanum_square_b"
-                android:hint="제목 입력"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textAlignment="center"
-                app:layout_constraintBottom_toBottomOf="@id/update_layout_top"
-                app:layout_constraintEnd_toStartOf="@+id/update_button"
-                app:layout_constraintStart_toEndOf="@+id/back_button"
-                app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/update_button"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/done" />
+
+                <EditText
+                    android:id="@+id/update_title_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/update_button"
+                    android:layout_toRightOf="@+id/back_button"
+                    android:background="@android:color/transparent"
+                    android:ems="12"
+                    android:fontFamily="@font/nanum_square_b"
+                    android:hint="제목 입력"
+                    android:inputType="text"
+                    android:padding="13dp"
+                    android:singleLine="true"
+                    android:textAlignment="center" />
+            </RelativeLayout>
+
 
             <EditText
                 android:id="@+id/update_content_edit"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/colorPickerGroup"
+                android:layout_below="@+id/update_layout_top"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="20dp"
                 android:background="@android:color/transparent"
                 android:ems="50"
-                android:hint="내용 입력"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/update_layout_top"
-                />
-
-            <View
-                android:id="@+id/edit_text_view"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/update_layout_top"
-                />
+                android:gravity="start"
+                android:hint="내용 입력" />
 
             <RadioGroup
                 android:id="@+id/colorPickerGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
                 android:layout_marginTop="25dp"
                 android:layout_marginBottom="20dp"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                android:orientation="horizontal">
 
                 <ToggleButton
                     android:id="@+id/colorBtn1"
@@ -194,7 +181,7 @@
                     android:textOn=" " />
             </RadioGroup>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </RelativeLayout>
 
 
     </FrameLayout>

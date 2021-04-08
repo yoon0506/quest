@@ -64,11 +64,6 @@ public class FragmentAdd extends Fragment {
                 mListener.eventBack();
             }
         });
-        mBinding.addTextView.setOnClickListener(v -> {
-            mBinding.addTextView.setVisibility(View.GONE);
-            mBinding.addContentEdit.requestFocus();
-            showKeyboard();
-        });
 
         /**
          * Insert
